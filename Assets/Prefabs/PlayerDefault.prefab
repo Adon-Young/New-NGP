@@ -421,6 +421,8 @@ MonoBehaviour:
   networkPlayerScore:
     m_InternalValue: 0
   clientScore: 0
+  mouseOnCatVisible:
+    m_InternalValue: 0
   playerScoreDisplayWater: {fileID: 0}
   playerScoreDisplayFire: {fileID: 0}
   playerScoreDisplayPlant: {fileID: 0}
@@ -472,7 +474,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4795177854600860295
 Transform:
   m_ObjectHideFlags: 0

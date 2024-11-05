@@ -1,85 +1,55 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Unity.Netcode;
 
-public class MouseOffering : NetworkBehaviour
+public class MouseOffering : MonoBehaviour
 {
-
     [SerializeField] private SpriteRenderer mouseSpriteRenderer;
-    //new variables for more accurate movement
-    private float mouseRotation = 0.0f;
-    public float mouseMovementSpeed = 1.0f;
- 
-    private Vector3 previousMousePosition;
-    private bool isMouseFlipped = false;
 
-    //sync to server time variables...
-    private float syncTimer;
-    private float updateInterval = 0.5f;
+    public float mouseMovementSpeed = 1.0f;
+    public float movementRange = 2.5f; // Half of the total movement range to either side
+
+    private Vector3 startingPosition; // Center of ping-pong movement
+    private bool isMouseFlipped = false;
 
     private void Start()
     {
-        previousMousePosition = transform.position;//last known position = the platforms current position.
+        // Store the initial position of the mouse as the center of its ping-pong movement
+        startingPosition = transform.position;
         mouseSpriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-
-
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
-        if (IsServer)
-        {
-            MouseMovementFunction();//calling the movement if is server.(to make sure movement is synced across all players)
-        }
-
-        syncTimer = Time.deltaTime;
-        if (Vector3.Distance(previousMousePosition, transform.position) > 0.01f)
-        {
-            MouseUpdateClientRPC(transform.position);
-            previousMousePosition = transform.position;
-
-        }
-        syncTimer = 0f;
-
+        MouseMovementFunction(); // Call movement in the Update method
     }
 
     void MouseMovementFunction()
     {
-        float newXPosition = Mathf.PingPong(Time.time * 1, 5);
-        //moved the basic movement from class into its own function
-        transform.position = new Vector3(newXPosition, transform.position.y, transform.position.z);
-        UpdateSpriteFlip(newXPosition);//flipping the mouse for everyone
+        // PingPong centered around the starting position, speed influenced by mouseMovementSpeed
+        float newXPosition = startingPosition.x + Mathf.PingPong(Time.time * mouseMovementSpeed, movementRange * 2) - movementRange; // Adjust to center
+        transform.position = new Vector3(newXPosition, startingPosition.y, transform.position.z);
+
+        UpdateSpriteFlip(newXPosition); // Flip sprite if needed
     }
 
-    private void UpdateSpriteFlip( float newXPosition)
-    {//not on button press but on value of position...
-        if ((newXPosition >= 5f) && !isMouseFlipped)
+    private void UpdateSpriteFlip(float newXPosition)
+    {
+        float epsilon = 0.1f; // A small threshold for floating-point comparison
+
+        // Flip based on the boundaries of movement
+        if (newXPosition >= startingPosition.x + movementRange - epsilon && !isMouseFlipped) // Right boundary
         {
-            Debug.Log("FlippedTrue");
             isMouseFlipped = true;
+            mouseSpriteRenderer.flipX = true; // Flip to face left
+            Debug.Log("FlippedTrue");
         }
-        else if ((newXPosition <= 0f) && isMouseFlipped)
+        else if (newXPosition <= startingPosition.x - movementRange + epsilon && isMouseFlipped) // Left boundary
         {
             isMouseFlipped = false;
+            mouseSpriteRenderer.flipX = false; // Flip to face right
             Debug.Log("FlippedFalse");
         }
-
-        mouseSpriteRenderer.flipX = isMouseFlipped;
     }
-
-
-
-    [ClientRpc]
-
-    void MouseUpdateClientRPC(Vector3 updatedPosition)
-    {
-        if (!IsServer) // Don't update on the server, it already has the correct position
-        {
-            transform.position = updatedPosition;
-        }
-    }
-
-
 }

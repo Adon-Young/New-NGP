@@ -10,10 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8154223214509843649}
   - component: {fileID: 6322857773244900765}
-  - component: {fileID: 6132635168629502558}
-  - component: {fileID: 8409323183895712635}
   - component: {fileID: 3605817937744312638}
   - component: {fileID: 2297272758098555872}
+  - component: {fileID: 7996120910438799633}
   m_Layer: 0
   m_Name: MousePrefab
   m_TagString: Mouse
@@ -31,8 +30,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.97, y: -3.03, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -88,41 +87,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &6132635168629502558
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2355359128798842130}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3270470492
-  InScenePlacedSourceGlobalObjectIdHash: 2820210589
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
---- !u!114 &8409323183895712635
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2355359128798842130}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c2d8a0991dd415040b27a8163415105a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mouseSpriteRenderer: {fileID: 6322857773244900765}
-  mouseMovementSpeed: 5
 --- !u!50 &3605817937744312638
 Rigidbody2D:
   serializedVersion: 4
@@ -195,3 +159,17 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.7303937, y: 0.4184214}
   m_EdgeRadius: 0
+--- !u!114 &7996120910438799633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2355359128798842130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2d8a0991dd415040b27a8163415105a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mouseSpriteRenderer: {fileID: 6322857773244900765}
+  mouseMovementSpeed: 5

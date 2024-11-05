@@ -18,7 +18,7 @@ public class NewPlayerController : NetworkBehaviour
      public  bool isPlantWorld = false;
      public  bool isMagicWorld = false;
      public bool isFrozen = true;//instead of having it set to true for all over network testing it locally
-   
+     private bool gravityToggle = false;
 
     //using properties allws me to keep the values private but still usable in my level controller script...
 
@@ -157,11 +157,24 @@ public class NewPlayerController : NetworkBehaviour
         {
             playerAnimatorController.SetBool("isInteracting", true);
 
-          
-            
+            gravityToggle = !gravityToggle;
+
+            if (gravityToggle)
+            {
+                Physics2D.gravity = new Vector2(0, 9.81f); // Gravity goes up
+                transform.localScale = new Vector3(transform.localScale.x, -1, transform.localScale.z); // Flip scale to face upwards
+            }
+            else
+            {
+                Physics2D.gravity = new Vector2(0, -9.81f); // Gravity goes down
+                transform.localScale = new Vector3(transform.localScale.x, 1, transform.localScale.z); // Flip scale to face downwards
+            }
+
+
             StartCoroutine(EndOfAnimation());
         }
         //---------------------------------------------------------------------------------------------------
+     
     }
 
     private IEnumerator EndOfAnimation()
@@ -185,10 +198,15 @@ public class NewPlayerController : NetworkBehaviour
         playersRB.velocity = new Vector2(moveX * moveSpeed, playersRB.velocity.y);
         playerAnimatorController.SetFloat("PlayerSpeed", Mathf.Abs(moveX));
 
-        if (isGrounded && Input.GetKeyDown(KeyCode.Space) && isFrozen == false)
+        if (isGrounded && Input.GetKeyDown(KeyCode.Space) && !isFrozen)
         {
             playerAnimatorController.SetBool("isJumping", true);
-            playersRB.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+
+            // Jump direction based on gravityToggle
+            Vector2 jumpDirection = gravityToggle ? Vector2.down : Vector2.up;
+            playersRB.AddForce(jumpDirection * jumpForce, ForceMode2D.Impulse);
+
+            // Flip the grounded state after the jump
             isGrounded = false;
         }
     }
