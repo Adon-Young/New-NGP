@@ -19,7 +19,12 @@ public class NewPlayerController : NetworkBehaviour
      public  bool isMagicWorld = false;
      public bool isFrozen = true;//instead of having it set to true for all over network testing it locally
      private bool gravityToggle = false;
-
+    //------------------------------------------
+    public bool isInWater = false;
+    public float waterGravityScale = 2f; // Gravity scale while in water
+    public float normalGravityScale = 1f; // Normal gravity scale
+    public float waterMoveSpeed = 2f;
+ 
     //using properties allws me to keep the values private but still usable in my level controller script...
 
     //----------------------------------------------------
@@ -60,7 +65,7 @@ public class NewPlayerController : NetworkBehaviour
     public Rigidbody2D playersRB;
     public int moveSpeed;
     private bool isGrounded;
-    private int jumpForce = 8;
+    public int jumpForce = 8;
     private Animator playerAnimatorController;
     public GameObject playerTagCanvas;
 
@@ -91,6 +96,7 @@ public class NewPlayerController : NetworkBehaviour
         PlayerMovement();
         PlayerInput();
         UpdateSpriteFlip();
+
     }
 
     private void UpdateSpriteFlip()
@@ -108,6 +114,17 @@ public class NewPlayerController : NetworkBehaviour
         mouseSpriteRenderer.flipX = isSpriteFlipped.Value;
 
 
+    }
+    public void EnterWater()
+    {
+        isInWater = true;
+        playersRB.gravityScale = waterGravityScale; // Disable gravity in water
+    }
+
+    public void ExitWater()
+    {
+        isInWater = false;
+        playersRB.gravityScale = normalGravityScale; // Restore normal gravity
     }
 
     private void PlayerInput()
@@ -134,9 +151,6 @@ public class NewPlayerController : NetworkBehaviour
         {
             playerAnimatorController.SetBool("isInteracting", true);
 
-
-
-
             StartCoroutine(EndOfAnimation());
         }
 
@@ -144,9 +158,6 @@ public class NewPlayerController : NetworkBehaviour
         if (Input.GetMouseButtonDown(0) && !isFrozen && isPlantWorld)
         {
             playerAnimatorController.SetBool("isInteracting", true);
-
-
-
 
             StartCoroutine(EndOfAnimation());
         }
@@ -186,6 +197,9 @@ public class NewPlayerController : NetworkBehaviour
     private void PlayerMovement()
     {
         float moveX = 0;
+        float moveY = 0;
+
+        // Horizontal movement (common to both in water and on land)
         if (Input.GetKey(KeyCode.A) && isFrozen == false)
         {
             moveX = -1;
@@ -195,9 +209,31 @@ public class NewPlayerController : NetworkBehaviour
             moveX = 1;
         }
 
-        playersRB.velocity = new Vector2(moveX * moveSpeed, playersRB.velocity.y);
+        // Vertical movement while in water
+        if (isInWater)
+        {
+            if (Input.GetKey(KeyCode.W))
+            {
+                moveY = 1;
+            }
+            else if (Input.GetKey(KeyCode.S))
+            {
+                moveY = -1;
+            }
+
+            // Adjust player velocity for both horizontal and vertical movement in water
+            playersRB.velocity = new Vector2(moveX * waterMoveSpeed, moveY * waterMoveSpeed);
+        }
+        else
+        {
+            // Normal horizontal movement
+            playersRB.velocity = new Vector2(moveX * moveSpeed, playersRB.velocity.y);
+        }
+
+        // Update animator if applicable
         playerAnimatorController.SetFloat("PlayerSpeed", Mathf.Abs(moveX));
 
+        // Jumping (common to both in water and on land)
         if (isGrounded && Input.GetKeyDown(KeyCode.Space) && !isFrozen)
         {
             playerAnimatorController.SetBool("isJumping", true);
@@ -210,6 +246,7 @@ public class NewPlayerController : NetworkBehaviour
             isGrounded = false;
         }
     }
+
 
     private void OnCollisionEnter2D(Collision2D collision)  
     {

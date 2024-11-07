@@ -9,6 +9,8 @@ TagManager:
   - Mouse
   - Ground
   - TargetObject
+  - Platform
+  - Water
   layers:
   - Default
   - TransparentFX

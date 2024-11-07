@@ -397,6 +397,10 @@ MonoBehaviour:
   isPlantWorld: 0
   isMagicWorld: 0
   isFrozen: 1
+  isInWater: 0
+  waterGravityScale: 5
+  normalGravityScale: 1
+  waterMoveSpeed: 2
   spawnedObjectTransform: {fileID: 1355280107905529074, guid: b0446c6baca5d8c4d88cd7e50d2e06e1, type: 3}
   spriteRenderer: {fileID: 8853842461750675839}
   mouseSpriteRenderer: {fileID: 0}
@@ -405,6 +409,7 @@ MonoBehaviour:
     m_InternalValue: 0
   playersRB: {fileID: 4785494268251088018}
   moveSpeed: 5
+  jumpForce: 7
   playerTagCanvas: {fileID: 845954341350251556}
 --- !u!114 &-7790097526382877231
 MonoBehaviour:
@@ -427,6 +432,7 @@ MonoBehaviour:
   playerScoreDisplayFire: {fileID: 0}
   playerScoreDisplayPlant: {fileID: 0}
   playerScoreDisplayMagic: {fileID: 0}
+  newPlatformSprite: {fileID: -831113977, guid: da4272b2489fa324991bc8b7d8d3cf38, type: 3}
 --- !u!114 &6710394211487144699
 MonoBehaviour:
   m_ObjectHideFlags: 0

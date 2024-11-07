@@ -19,6 +19,7 @@ public class PlayerCollision : NetworkBehaviour
     private GameObject MouseOnCatObject;
     private NewPlayerController playerController; // Reference to player controller
 
+    public Sprite newPlatformSprite;
     public void Start()
     {
         // Set up the local reference to MouseOnCatObject and ensure it starts inactive
@@ -102,7 +103,24 @@ public class PlayerCollision : NetworkBehaviour
                 SetMouseOnCatVisibleServerRpc(true);
             }
         }
+        //water cat sstuff---------------------------------------------
+
+        if (other.CompareTag("Water") && playerController.isWaterWorld == true)
+        {
+            playerController.EnterWater();
+        }
+
+
+
     }
+
+   void OnTriggerExit2D(Collider2D other)
+        {
+            if (other.CompareTag("Water") && playerController.isWaterWorld == true)
+            {
+            playerController.ExitWater();
+            }
+        }
 
     [ServerRpc(RequireOwnership = false)]
     public void UpdateScoreServerRpc(int addValue, ulong clientId)
