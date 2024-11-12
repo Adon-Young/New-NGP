@@ -4,27 +4,30 @@ using TMPro;
 
 public class PlayerCollision : NetworkBehaviour
 {
-    public NetworkVariable<int> networkPlayerScore = new NetworkVariable<int>(0);
-    public int clientScore = 0; // Local score variable
+    public NetworkVariable<int> networkMouseOfferings = new NetworkVariable<int>(0);  // Score for Mouse Offerings
+    public NetworkVariable<int> networkStatueScore = new NetworkVariable<int>(0);  // Score for Statue
+
+    private int clientMouseOfferings = 0;  // Local score for Mouse Offerings
+    private int clientStatueScore = 0;  // Local score for Statue
+
+    private TMP_Text mouseOfferingsText;  // Reference to the Text UI for displaying the mouse offerings score
+    private TMP_Text statueScoreText;  // Reference to the Text UI for displaying the statue score
+
+    private GameObject MouseOnCatObject;  // The GameObject that is the mouse sprite (child of the player)
+    private NewPlayerController playerController;  // Reference to the player controller
 
     // Network variable to sync MouseOnCat state
     public NetworkVariable<bool> mouseOnCatVisible = new NetworkVariable<bool>(false);
 
-    // UI text components for displaying the score in different worlds
-    public TMP_Text playerScoreDisplayWater;
-    public TMP_Text playerScoreDisplayFire;
-    public TMP_Text playerScoreDisplayPlant;
-    public TMP_Text playerScoreDisplayMagic;
-
-    private GameObject MouseOnCatObject;
-    private NewPlayerController playerController; // Reference to player controller
-
-    public Sprite newPlatformSprite;
     public void Start()
     {
+        // Dynamically find the Mouse Offerings and Statue Score Text objects in the Canvas
+        mouseOfferingsText = GameObject.Find("MouseOfferings").GetComponent<TMP_Text>();
+        statueScoreText = GameObject.Find("StatueScore").GetComponent<TMP_Text>();  // Assuming statue score is displayed as well
+
         // Set up the local reference to MouseOnCatObject and ensure it starts inactive
-        MouseOnCatObject = this.gameObject.transform.GetChild(1).gameObject;
-        MouseOnCatObject.SetActive(false);
+        MouseOnCatObject = this.gameObject.transform.GetChild(1).gameObject;  // Assuming it's the second child
+        MouseOnCatObject.SetActive(false);  // Initially hide the mouse sprite
 
         // Subscribe to the network variable's change event
         mouseOnCatVisible.OnValueChanged += OnMouseOnCatVisibilityChanged;
@@ -44,92 +47,93 @@ public class PlayerCollision : NetworkBehaviour
 
     public void Update()
     {
-        // Get the player's world type
-        playerController = GetComponent<NewPlayerController>();
 
-        // Based on the world the player is in, find the corresponding score display UI
-        if (playerController.isWaterWorld)
+        playerController = GetComponent<NewPlayerController>();
+        // Update the score displays on the client if the Text objects are found
+        if (mouseOfferingsText != null)
         {
-            GameObject scoreTextObject = GameObject.Find("WaterWorldScoreTMP");
-            if (scoreTextObject != null)
-            {
-                playerScoreDisplayWater = scoreTextObject.GetComponent<TMP_Text>();
-            }
+            mouseOfferingsText.text = "Mouse Offerings: " + clientMouseOfferings.ToString();
         }
-        else if (playerController.isFireWorld)
+
+        if (statueScoreText != null)
         {
-            GameObject scoreTextObject = GameObject.Find("FireWorldScoreTMP");
-            if (scoreTextObject != null)
-            {
-                playerScoreDisplayFire = scoreTextObject.GetComponent<TMP_Text>();
-            }
-        }
-        else if (playerController.isPlantWorld)
-        {
-            GameObject scoreTextObject = GameObject.Find("PlantWorldScoreTMP");
-            if (scoreTextObject != null)
-            {
-                playerScoreDisplayPlant = scoreTextObject.GetComponent<TMP_Text>();
-            }
-        }
-        else if (playerController.isMagicWorld)
-        {
-            GameObject scoreTextObject = GameObject.Find("MagicWorldScoreTMP");
-            if (scoreTextObject != null)
-            {
-                playerScoreDisplayMagic = scoreTextObject.GetComponent<TMP_Text>();
-            }
+            statueScoreText.text = "Statue Score: " + clientStatueScore.ToString();
         }
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Statue"))
-        {
-            if (NetworkManager.Singleton.LocalClientId == OwnerClientId)
-            {
-                UpdateScoreServerRpc(1, OwnerClientId);
-            }
-        }
-
         if (other.CompareTag("Mouse"))
         {
             if (NetworkManager.Singleton.LocalClientId == OwnerClientId)
             {
-                UpdateScoreServerRpc(1, OwnerClientId);
+                // Update the mouse offerings score and notify all clients
+                UpdateMouseOfferingsScoreServerRpc(1, OwnerClientId);
 
-                // Destroy the mouse object and set the network variable to make MouseOnCat visible
+                // Destroy the mouse object after scoring
                 Destroy(other.gameObject);
+
+                // Set the mouse sprite child object to be visible
                 SetMouseOnCatVisibleServerRpc(true);
             }
         }
-        //water cat sstuff---------------------------------------------
 
+        if (other.CompareTag("Statue"))
+        {
+            // Update the statue score when a player enters the statue area
+            if (NetworkManager.Singleton.LocalClientId == OwnerClientId)
+            {
+                UpdateStatueScoreServerRpc(1, OwnerClientId);
+            }
+        }
+
+        // Water collision logic
         if (other.CompareTag("Water") && playerController.isWaterWorld == true)
         {
             playerController.EnterWater();
         }
-
-
-
+        else if (other.CompareTag("Water") && playerController.isWaterWorld != true)
+        {
+            playerController.EnterWater();
+        }
     }
 
-   void OnTriggerExit2D(Collider2D other)
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Statue"))
         {
-            if (other.CompareTag("Water") && playerController.isWaterWorld == true)
+            // Decrease the statue score when the player exits the statue area
+            if (NetworkManager.Singleton.LocalClientId == OwnerClientId)
             {
-            playerController.ExitWater();
+                UpdateStatueScoreServerRpc(-1, OwnerClientId);
             }
         }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void UpdateScoreServerRpc(int addValue, ulong clientId)
-    {
-        networkPlayerScore.Value += addValue;
-        Debug.Log("The score of player " + clientId + " is " + networkPlayerScore.Value);
-        NotifyScoreClientRpc(networkPlayerScore.Value);
+        if (other.CompareTag("Water") && playerController.isWaterWorld == true)
+        {
+            playerController.ExitWater();
+        }
     }
 
+    // ServerRpc to update the mouse offerings score on the server
+    [ServerRpc(RequireOwnership = false)]
+    public void UpdateMouseOfferingsScoreServerRpc(int addValue, ulong clientId)
+    {
+        networkMouseOfferings.Value += addValue;  // Add value to the score on the server
+        Debug.Log("The Mouse Offerings score of player " + clientId + " is " + networkMouseOfferings.Value);
+        NotifyMouseOfferingsScoreClientRpc(networkMouseOfferings.Value);  // Notify all clients to update their display
+    }
+
+    // ServerRpc to update the statue score on the server
+    [ServerRpc(RequireOwnership = false)]
+    public void UpdateStatueScoreServerRpc(int addValue, ulong clientId)
+    {
+        networkStatueScore.Value += addValue;  // Add value to the statue score on the server
+        Debug.Log("The Statue score of player " + clientId + " is " + networkStatueScore.Value);
+        NotifyStatueScoreClientRpc(networkStatueScore.Value);  // Notify all clients to update their display
+    }
+
+    // ServerRpc to show/hide the mouse sprite (statue functionality can be added here)
     [ServerRpc]
     public void SetMouseOnCatVisibleServerRpc(bool isVisible)
     {
@@ -137,31 +141,29 @@ public class PlayerCollision : NetworkBehaviour
         mouseOnCatVisible.Value = isVisible;
     }
 
+    // ClientRpc to notify all clients about the updated mouse offerings score
     [ClientRpc]
-    private void NotifyScoreClientRpc(int newScore)
+    private void NotifyMouseOfferingsScoreClientRpc(int newScore)
     {
-        Debug.Log("NotifyScoreClientRpc called with new score: " + newScore);
-        clientScore = newScore;
+        clientMouseOfferings = newScore;
 
-        if (playerController.isWaterWorld && playerScoreDisplayWater != null)
+        // Update the UI to reflect the new score
+        if (mouseOfferingsText != null)
         {
-            playerScoreDisplayWater.text = "Water Cat Score: " + clientScore.ToString();
+            mouseOfferingsText.text = "Mouse Offerings: " + clientMouseOfferings.ToString();
         }
-        else if (playerController.isFireWorld && playerScoreDisplayFire != null)
+    }
+
+    // ClientRpc to notify all clients about the updated statue score
+    [ClientRpc]
+    private void NotifyStatueScoreClientRpc(int newScore)
+    {
+        clientStatueScore = newScore;
+
+        // Update the UI to reflect the new statue score
+        if (statueScoreText != null)
         {
-            playerScoreDisplayFire.text = "Fire Cat Score: " + clientScore.ToString();
-        }
-        else if (playerController.isPlantWorld && playerScoreDisplayPlant != null)
-        {
-            playerScoreDisplayPlant.text = "Plant Cat Score: " + clientScore.ToString();
-        }
-        else if (playerController.isMagicWorld && playerScoreDisplayMagic != null)
-        {
-            playerScoreDisplayMagic.text = "Magic Cat Score: " + clientScore.ToString();
-        }
-        else
-        {
-            Debug.LogError("No score display UI found for the current world!");
+            statueScoreText.text = "Statue Score: " + clientStatueScore.ToString();
         }
     }
 }

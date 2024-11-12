@@ -210,7 +210,7 @@ public class NewPlayerController : NetworkBehaviour
         }
 
         // Vertical movement while in water
-        if (isInWater)
+        if (isInWater && isWaterWorld == true)
         {
             if (Input.GetKey(KeyCode.W))
             {
@@ -224,6 +224,12 @@ public class NewPlayerController : NetworkBehaviour
             // Adjust player velocity for both horizontal and vertical movement in water
             playersRB.velocity = new Vector2(moveX * waterMoveSpeed, moveY * waterMoveSpeed);
         }
+
+        else if (isInWater && isWaterWorld != true)
+        {
+            playersRB.velocity = new Vector2(moveX * waterMoveSpeed, moveY * waterMoveSpeed);
+        }
+
         else
         {
             // Normal horizontal movement
