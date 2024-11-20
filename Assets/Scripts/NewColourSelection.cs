@@ -15,8 +15,8 @@ public class NewColourSelection : NetworkBehaviour
     private static readonly int maxPlayers = 4; // Maximum number of players (adjust this as needed)
 
     [SerializeField] private Image[] blockerImages; // Array to hold the blocker UI images for each character
+    [SerializeField] private Button[] characterButtons; // Array to hold character selection buttons
 
-    // The function that is called when a player selects their character
     private void Start()
     {
         levelController = FindObjectOfType<LevelController>();
@@ -35,7 +35,6 @@ public class NewColourSelection : NetworkBehaviour
         GetComponent<Button>().onClick.AddListener(SelectCharacter);
     }
 
-    // This is where the character selection happens
     private void SelectCharacter()
     {
         if (NetworkManager.Singleton.LocalClient.PlayerObject != null)
@@ -56,15 +55,17 @@ public class NewColourSelection : NetworkBehaviour
                     readyText.text = "READY!";
                 }
 
-                // Disable the button after player has pressed it
+                // Disable this button locally to prevent the player from selecting another character
                 GetComponent<Button>().interactable = false;
 
-                // Block other players from selecting this character by enabling the UI blocker image
-                int characterIndex = GetCharacterIndex(playerTag); // Assuming you have a way to match the character with the index
+                // Block all other character buttons locally for this player
+                DisableOtherButtonsLocally();
+
+                // Notify the server to block the character for all players
+                int characterIndex = GetCharacterIndex(playerTag);
                 if (characterIndex >= 0 && characterIndex < blockerImages.Length)
                 {
-                    // Use Invoke to delay the blocker image enabling
-                    Invoke(nameof(EnableBlockerImages), 0.1f);
+                    RequestBlockerActivationServerRpc(characterIndex);
                 }
 
                 if (levelController != null)
@@ -77,6 +78,18 @@ public class NewColourSelection : NetworkBehaviour
                 {
                     StartGame(); // Call the start game function when all players are ready
                 }
+            }
+        }
+    }
+
+    // Disables all character buttons except the one the player selected
+    private void DisableOtherButtonsLocally()
+    {
+        foreach (Button button in characterButtons)
+        {
+            if (button != GetComponent<Button>())
+            {
+                button.interactable = false;
             }
         }
     }
@@ -94,40 +107,26 @@ public class NewColourSelection : NetworkBehaviour
         }
     }
 
-    private void EnableBlockerImages()
+    // ServerRpc to handle blocking character selection for all players
+    [ServerRpc(RequireOwnership = false)]
+    private void RequestBlockerActivationServerRpc(int characterIndex)
     {
-        int characterIndex = GetCharacterIndex(playerTag); // Get the current player's character index
+        EnableBlockerImageClientRpc(characterIndex);
+    }
+
+    // ClientRpc to enable the blocker UI for the specified character index
+    [ClientRpc]
+    private void EnableBlockerImageClientRpc(int characterIndex)
+    {
         if (characterIndex >= 0 && characterIndex < blockerImages.Length)
         {
-            EnableBlockerImageForAll(characterIndex);
-        }
-    }
-
-    // Function to enable the blocker UI images for all players (this function is executed on all clients)
-    private void EnableBlockerImageForAll(int index)
-    {
-        Debug.Log("Attempting to enable blocker image at index: " + index);
-        if (IsServer) // Ensure this is done on the server side
-        {
-            // Sync the blocker image state across all clients
-            EnableBlockerImageClientRpc(index);
-        }
-    }
-
-    [ClientRpc]
-    private void EnableBlockerImageClientRpc(int index)
-    {
-        Debug.Log("Enabling blocker image on all clients for index: " + index);
-        if (index >= 0 && index < blockerImages.Length)
-        {
-            blockerImages[index].gameObject.SetActive(true); // Enable the image for the selected character
+            blockerImages[characterIndex].gameObject.SetActive(true);
         }
     }
 
     // Function to start the game (this can be expanded later with actual game start logic)
     private void StartGame()
     {
-        // Logic for starting the game goes here
         Debug.Log("All players are ready. Starting the game...");
     }
 
@@ -161,7 +160,6 @@ public class NewColourSelection : NetworkBehaviour
 
         if (allReady)
         {
-            // Call the function to start the game
             StartGame();
         }
     }
@@ -169,7 +167,6 @@ public class NewColourSelection : NetworkBehaviour
     // This method will be called when a player leaves (or despawns)
     private void OnNetworkDespawn()
     {
-        // Reset UI for all clients when a player leaves
         if (IsServer)
         {
             ResetUIForAllClients();
@@ -181,19 +178,14 @@ public class NewColourSelection : NetworkBehaviour
     {
         if (IsServer)
         {
-            // Reset the "READY!" text
             readyText.text = "";
 
-            // Disable the blocker images for everyone
             foreach (Image blockerImage in blockerImages)
             {
                 blockerImage.gameObject.SetActive(false);
             }
 
-            // Reset the button state for everyone (enable it)
             GetComponent<Button>().interactable = true;
-
-            // Sync this across all clients
             ResetUIClientRpc();
         }
     }
@@ -201,14 +193,11 @@ public class NewColourSelection : NetworkBehaviour
     [ClientRpc]
     private void ResetUIClientRpc()
     {
-        // Reset the "READY!" text and blocker images for all clients
         readyText.text = "";
         foreach (Image blockerImage in blockerImages)
         {
             blockerImage.gameObject.SetActive(false);
         }
-
-        // Enable the button
         GetComponent<Button>().interactable = true;
     }
 }

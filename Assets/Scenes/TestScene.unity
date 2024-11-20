@@ -2093,6 +2093,11 @@ MonoBehaviour:
   - {fileID: 479227960}
   - {fileID: 1765120934}
   - {fileID: 1637864081}
+  characterButtons:
+  - {fileID: 617100589}
+  - {fileID: 570755907}
+  - {fileID: 1934120959}
+  - {fileID: 745970412}
 --- !u!1 &572264993
 GameObject:
   m_ObjectHideFlags: 0
@@ -2638,6 +2643,11 @@ MonoBehaviour:
   - {fileID: 479227960}
   - {fileID: 1765120934}
   - {fileID: 1637864081}
+  characterButtons:
+  - {fileID: 617100589}
+  - {fileID: 570755907}
+  - {fileID: 1934120959}
+  - {fileID: 745970412}
 --- !u!1 &627298745
 GameObject:
   m_ObjectHideFlags: 0
@@ -2907,23 +2917,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 763b1e1594cd3714d8d960d8e08c9d4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <IsLocalPlayer>k__BackingField: 0
-  <IsOwner>k__BackingField: 0
-  <IsServer>k__BackingField: 0
-  <ServerIsHost>k__BackingField: 0
-  <IsClient>k__BackingField: 0
-  <IsHost>k__BackingField: 0
-  <IsOwnedByServer>k__BackingField: 0
-  <IsSpawned>k__BackingField: 0
-  m_NetworkObject: {fileID: 0}
-  <NetworkObjectId>k__BackingField: 0
-  <NetworkBehaviourId>k__BackingField: 0
-  NetworkBehaviourIdCache: 0
-  <OwnerClientId>k__BackingField: 0
-  m_VarInit: 0
-  <m_TargetIdBeingSynchronized>k__BackingField: 0
-  playerScore: {m_NetworkBehaviour: {fileID: 0}, m_IsDirty: 0, <Name>k__BackingField: , m_InternalValue: 0, m_PreviousValue: 0, m_HasPreviousValue: 0, m_IsDisposed: 0}
-  scoreText: {fileID: 1735692291}
 --- !u!1 &648272684
 GameObject:
   m_ObjectHideFlags: 0
@@ -3328,6 +3321,11 @@ MonoBehaviour:
   - {fileID: 479227960}
   - {fileID: 1765120934}
   - {fileID: 1637864081}
+  characterButtons:
+  - {fileID: 617100589}
+  - {fileID: 570755907}
+  - {fileID: 1934120959}
+  - {fileID: 745970412}
 --- !u!1 &753909268
 GameObject:
   m_ObjectHideFlags: 0
@@ -9885,13 +9883,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Magic
-  playerColor: {r: 0.83137256, g: 0.27058825, b: 1, a: 1}
+  playerColor: {r: 0.8313726, g: 0.2705882, b: 1, a: 1}
   readyText: {fileID: 736825771}
   blockerImages:
   - {fileID: 1266051726}
   - {fileID: 479227960}
   - {fileID: 1765120934}
   - {fileID: 1637864081}
+  characterButtons:
+  - {fileID: 617100589}
+  - {fileID: 570755907}
+  - {fileID: 1934120959}
+  - {fileID: 745970412}
 --- !u!1 &1969274512
 GameObject:
   m_ObjectHideFlags: 0
