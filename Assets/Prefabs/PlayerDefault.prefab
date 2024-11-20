@@ -174,8 +174,8 @@ GameObject:
   - component: {fileID: 553827033376628186}
   - component: {fileID: 6544313239275177800}
   - component: {fileID: 2235142725620107644}
-  - component: {fileID: -7790097526382877231}
   - component: {fileID: 6710394211487144699}
+  - component: {fileID: 5428906997072121561}
   m_Layer: 3
   m_Name: PlayerDefault
   m_TagString: Player
@@ -411,24 +411,6 @@ MonoBehaviour:
   moveSpeed: 5
   jumpForce: 7
   playerTagCanvas: {fileID: 845954341350251556}
---- !u!114 &-7790097526382877231
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3097602031215194084}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d935f0ca168f10641a10ab527a372e12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  networkMouseOfferings:
-    m_InternalValue: 0
-  networkStatueScore:
-    m_InternalValue: 0
-  mouseOnCatVisible:
-    m_InternalValue: 0
 --- !u!114 &6710394211487144699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -460,6 +442,24 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &5428906997072121561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3097602031215194084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 641adad68ddbdc940a8a58346fbc5162, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  networkMouseOfferings:
+    m_InternalValue: 0
+  networkStatueScore:
+    m_InternalValue: 0
+  mouseOnCatVisible:
+    m_InternalValue: 0
 --- !u!1 &8537471497673540198
 GameObject:
   m_ObjectHideFlags: 0
@@ -476,7 +476,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4795177854600860295
 Transform:
   m_ObjectHideFlags: 0
