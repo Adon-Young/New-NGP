@@ -44,20 +44,21 @@ public class PlayerCollision : NetworkBehaviour
         // Update the visibility of MouseOnCatObject based on the network variable's value
         MouseOnCatObject.SetActive(newValue);
     }
-
     public void Update()
     {
-
         playerController = GetComponent<NewPlayerController>();
+
         // Update the score displays on the client if the Text objects are found
         if (mouseOfferingsText != null)
         {
-            mouseOfferingsText.text = "Mouse Offerings: " + clientMouseOfferings.ToString();
+            // Update the UI with the network variable value directly
+            mouseOfferingsText.text = "Mouse Offerings: " + networkMouseOfferings.Value.ToString();
         }
 
         if (statueScoreText != null)
         {
-            statueScoreText.text = "Statue Score: " + clientStatueScore.ToString();
+            // Update the UI with the network variable value directly
+            statueScoreText.text = "Statue Score: " + networkStatueScore.Value.ToString();
         }
     }
 
