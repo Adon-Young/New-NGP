@@ -45,25 +45,18 @@ public class LevelTimer : NetworkBehaviour
 
     private void Update()
     {
-        // Toggle countdown/level start and level end
-        if (Input.GetKeyDown(KeyCode.T) && IsServer) // Only allow the server to toggle the level state
+        if (IsServer && timerRunning && !levelComplete)
         {
-            ToggleLevelState();
-        }
-
-        // If the timer is running and level is not complete, update the timer
-        if (timerRunning && !levelComplete)
-        {
-            timeTaken += Time.deltaTime;
-            UpdateTimerTextClientRpc(timeTaken); // Send current time to clients
+            timeTaken += Time.deltaTime; // Update time only on server
+            UpdateTimerTextClientRpc(timeTaken); // Send updated time to all clients
 
             if (timeTaken >= timeLimit)
             {
-                StopTimerServerRpc(); // Call server function to stop timer
+                StopTimerServerRpc(); // Stop the timer when time is up
             }
         }
 
-        // If countdown is running, update countdown
+        // Countdown display on the client
         if (countdownValue.Value > 0)
         {
             countdownText.text = countdownValue.Value.ToString();
@@ -72,22 +65,19 @@ public class LevelTimer : NetworkBehaviour
 
     private IEnumerator CountdownCoroutine()
     {
-        // Run the countdown
         for (int i = 3; i > 0; i--)
         {
-            countdownValue.Value = i; // Update network variable
+            countdownValue.Value = i; // Sync countdown value across network
             yield return new WaitForSeconds(1f);
         }
 
-        countdownValue.Value = 0; // Clear countdown
-        UpdateTimerTextClientRpc(timeTaken); // Notify clients that the countdown is over
+        countdownValue.Value = 0; // Countdown complete
+        UpdateTimerTextClientRpc(timeTaken); // Notify clients that the countdown is done
+        yield return new WaitForSeconds(1f); // Wait briefly before starting the timer
 
-        // Wait a moment before starting the timer for clarity
-        yield return new WaitForSeconds(1f);
-
-        // Start the timer after the countdown is complete
+        // Start the game timer on the server
         timerRunning = true;  // Start the level timer
-        UpdateOnlineDataUsingLocalValues(); // Update online state to indicate timer has started
+        UpdateOnlineDataUsingLocalValues(); // Sync state to all clients
     }
 
     // Calculate score based on time remaining
@@ -116,21 +106,7 @@ public class LevelTimer : NetworkBehaviour
         levelComplete = true;  // Mark the level as complete
     }
 
-    private void ToggleLevelState()
-    {
-        levelComplete = !levelComplete;
 
-        if (levelComplete)
-        {
-            StopTimerServerRpc(); // Notify server to stop the timer
-            Debug.Log("Level complete! Final Score: " + score);
-        }
-        else
-        {
-            Debug.Log("Starting level...");
-            StartTimerServerRpc(); // Notify server to start the timer
-        }
-    }
 
     // Separate function to reset the score only when you want to
     public void ResetScore()
@@ -149,7 +125,7 @@ public class LevelTimer : NetworkBehaviour
     //----------------------------------------------------------------------------------------------------------
     // Network functions...
 
-    private void UpdateOnlineDataUsingLocalValues() // Fixed typo
+    private void UpdateOnlineDataUsingLocalValues()
     {
         MyScoreMechanics newScoreData = new MyScoreMechanics
         {
@@ -158,15 +134,25 @@ public class LevelTimer : NetworkBehaviour
             endOfCounttDownTimer_timerRunning = timerRunning
         };
 
-        onlineScoreData.Value = newScoreData; // Update the instance of the struct
+        onlineScoreData.Value = newScoreData; // Update the network variable with server-side data
     }
     //----------------------------------------------------------------------------------------------------------
     [ServerRpc]
     public void StartTimerServerRpc()
     {
-        timeTaken = 0f; // Reset timer
+        if (timerRunning) // Check if timer is already running
+        {
+            Debug.LogWarning("Timer already running. Cannot start again.");
+            return;
+        }
+
+        // Initialize values server-side
+        timeTaken = 0f; // Reset time
+        levelComplete = false; // Ensure level is not complete
         timerRunning = false; // Ensure timer is off initially
-        StartCoroutine(CountdownCoroutine()); // Start your countdown coroutine
+
+        // Start countdown and begin the game timer once it finishes
+        StartCoroutine(CountdownCoroutine());
     }
 
     [ServerRpc]
@@ -174,9 +160,11 @@ public class LevelTimer : NetworkBehaviour
     {
         timerRunning = false; // Stop the timer on the server
         CalculateScore(); // Calculate the score on the server
-        UpdateOnlineDataUsingLocalValues(); // Update the online score data
-        UpdateTimerTextClientRpc(timeTaken); // Send final time to clients
-        UpdateScoreClientRpc(score); // Send the score to clients
+
+        // Update all clients with the final state
+        UpdateOnlineDataUsingLocalValues();
+        UpdateTimerTextClientRpc(timeTaken);
+        UpdateScoreClientRpc(score);
     }
 
     [ServerRpc]
@@ -200,8 +188,8 @@ public class LevelTimer : NetworkBehaviour
     [ClientRpc]
     private void UpdateTimerTextClientRpc(float time)
     {
-        timeTaken = time; // Sync time with clients
-        UpdateLevelTimerText(); // Update the displayed time
+        timeTaken = time; // Sync the time value with clients
+        UpdateLevelTimerText(); // Update the timer text on the client UI
     }
 
     [ClientRpc]

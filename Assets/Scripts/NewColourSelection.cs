@@ -19,6 +19,9 @@ public class NewColourSelection : NetworkBehaviour
 
     private void Start()
     {
+
+     
+
         levelController = FindObjectOfType<LevelController>();
         if (levelController == null)
         {
@@ -167,6 +170,7 @@ public class NewColourSelection : NetworkBehaviour
     // This method will be called when a player leaves (or despawns)
     private void OnNetworkDespawn()
     {
+       
         if (IsServer)
         {
             ResetUIForAllClients();
@@ -200,4 +204,12 @@ public class NewColourSelection : NetworkBehaviour
         }
         GetComponent<Button>().interactable = true;
     }
+
+
+   
+
+
+
+
+
 }
