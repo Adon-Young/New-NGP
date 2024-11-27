@@ -72,7 +72,7 @@ public class BeginGame : NetworkBehaviour
 
     private void OnAllPlayersSelected()
     {
-        if (characterSelected.Value == 2)
+        if (characterSelected.Value == 4)
         {
            
 
