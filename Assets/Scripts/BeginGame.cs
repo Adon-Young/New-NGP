@@ -9,7 +9,7 @@ public class BeginGame : NetworkBehaviour
     private int numberOfCharactersSelected = 0;  // Local score for Mouse Offerings
     LevelTimer gamesLevelTimerReference;
     public GameObject charSelectionScreen;
-
+  
     // Start is called before the first frame update
     private void Awake()
     {
@@ -72,13 +72,15 @@ public class BeginGame : NetworkBehaviour
 
     private void OnAllPlayersSelected()
     {
-        if (characterSelected.Value == 4)
+        if (characterSelected.Value == 2)
         {
+           
+
             Debug.Log("All players have selected their characters! Transitioning...");
 
             // Transition UI
             charSelectionScreen.SetActive(false);
-
+            NewPlayerController.UnfreezePlayer();
 
             // Start game countdown timer
             if (gamesLevelTimerReference != null)

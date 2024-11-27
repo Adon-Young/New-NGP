@@ -17,7 +17,7 @@ public class NewPlayerController : NetworkBehaviour
      public  bool isFireWorld = false;
      public  bool isPlantWorld = false;
      public  bool isMagicWorld = false;
-     public bool isFrozen = true;//instead of having it set to true for all over network testing it locally
+     private static bool isFrozen = true;//instead of having it set to true for all over network testing it locally
      private bool gravityToggle = false;
     //------------------------------------------
     public bool isInWater = false;
@@ -69,8 +69,18 @@ public class NewPlayerController : NetworkBehaviour
     private Animator playerAnimatorController;
     public GameObject playerTagCanvas;
 
+    public static void UnfreezePlayer()
+    {
+        isFrozen = false;
+        Debug.Log("Player is unfrozen!");
+    }
+
+
+
     public void Awake()
     {
+
+        isFrozen = true;
         playersRB = GetComponent<Rigidbody2D>();
         playerAnimatorController = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();

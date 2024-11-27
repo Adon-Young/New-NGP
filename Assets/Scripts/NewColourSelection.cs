@@ -47,7 +47,7 @@ public class NewColourSelection : NetworkBehaviour
             if (playerController != null)
             {
                 playerController.SetPlayerNameTagAndColour(playerTag, playerColor);
-                playerController.isFrozen = false;
+                
 
                 // Set player as ready
                 playersReadyCount++;
