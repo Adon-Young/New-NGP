@@ -146,39 +146,9 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
         // Check if the player is the host
         if (IsHost)
         {
-            // If the host is leaving, find another client to become the new host
-            Debug.Log("Host is leaving the game, attempting to transfer host role...");
-
-            // If there are other clients connected, choose the first one as the new host
-            if (NetworkManager.Singleton.ConnectedClients.Count > 1)
-            {
-                // Select the first client who is not the current host
-                ulong newHostClientId = NetworkManager.Singleton.ConnectedClients
-                    .Where(client => client.Key != NetworkManager.Singleton.LocalClientId)  // Exclude the current host
-                    .Select(client => client.Key) // Get the client id (ulong)
-                    .FirstOrDefault(); // Get the first available client
-
-                if (newHostClientId != default)
-                {
-                    // Log and set the new host.
-                    Debug.Log($"New host assigned: Client {newHostClientId}");
-
-                    // Optionally: Send a network message to the new client that they're the host.
-                    // For example, you can use a custom network message or method to notify the new host.
-
-                    // Restart the server and make the new client the host (this would need to be implemented manually)
-                    NetworkManager.Singleton.Shutdown(); // Shut down the current server
-
-                    // Restart the server and reassign the role
-                    NetworkManager.Singleton.StartHost(); // Restart server as the new host
-                }
-            }
-            else
-            {
-                // If there are no clients left, shut down the server
-                Debug.Log("No clients left, shutting down the server...");
-                NetworkManager.Singleton.Shutdown();
-            }
+            // If the host is leaving, simply shut down the server
+            Debug.Log("Host is leaving the game. Shutting down the server...");
+            NetworkManager.Singleton.Shutdown(); // Shut down the server
         }
         else if (IsClient)
         {
@@ -187,8 +157,6 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
             NetworkManager.Singleton.Shutdown(); // Disconnect the client
         }
     }
-
-
 
     // Callback for when a player disconnects
     private void OnClientDisconnected(ulong clientId)

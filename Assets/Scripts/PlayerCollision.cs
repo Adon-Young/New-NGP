@@ -4,17 +4,17 @@ using TMPro;
 
 public class PlayerCollision : NetworkBehaviour
 {
-    public NetworkVariable<int> networkMouseOfferings = new NetworkVariable<int>(0);  // Score for Mouse Offerings
-    public NetworkVariable<int> networkStatueScore = new NetworkVariable<int>(0);  // Score for Statue
-
-    private int clientMouseOfferings = 0;  // Local score for Mouse Offerings
-    private int clientStatueScore = 0;  // Local score for Statue
-
+    // Network variables to track individual player scores and total scores
+    public NetworkVariable<int> networkMouseOfferings = new NetworkVariable<int>(0);  // Player's mouse score
+    public NetworkVariable<int> networkStatueScore = new NetworkVariable<int>(0);  // Player's statue score
+    public static NetworkVariable<int> totalMouseOfferings = new NetworkVariable<int>(0);  // Total mouse score for all players
+    public static NetworkVariable<int> totalStatueScore = new NetworkVariable<int>(0);  // Total statue score for all players
+    LevelTimer gamesLevelTimerReference;
+    NewPlayerController playerController;
     private TMP_Text mouseOfferingsText;  // Reference to the Text UI for displaying the mouse offerings score
     private TMP_Text statueScoreText;  // Reference to the Text UI for displaying the statue score
 
     private GameObject MouseOnCatObject;  // The GameObject that is the mouse sprite (child of the player)
-    private NewPlayerController playerController;  // Reference to the player controller
 
     // Network variable to sync MouseOnCat state
     public NetworkVariable<bool> mouseOnCatVisible = new NetworkVariable<bool>(false);
@@ -23,7 +23,7 @@ public class PlayerCollision : NetworkBehaviour
     {
         // Dynamically find the Mouse Offerings and Statue Score Text objects in the Canvas
         mouseOfferingsText = GameObject.Find("MouseOfferings").GetComponent<TMP_Text>();
-        statueScoreText = GameObject.Find("StatueScore").GetComponent<TMP_Text>();  // Assuming statue score is displayed as well
+        statueScoreText = GameObject.Find("StatueScore").GetComponent<TMP_Text>();
 
         // Set up the local reference to MouseOnCatObject and ensure it starts inactive
         MouseOnCatObject = this.gameObject.transform.GetChild(1).gameObject;  // Assuming it's the second child
@@ -44,21 +44,23 @@ public class PlayerCollision : NetworkBehaviour
         // Update the visibility of MouseOnCatObject based on the network variable's value
         MouseOnCatObject.SetActive(newValue);
     }
+
     public void Update()
     {
-        playerController = GetComponent<NewPlayerController>();
+
+        CheckAndStopTimer();
 
         // Update the score displays on the client if the Text objects are found
         if (mouseOfferingsText != null)
         {
-            // Update the UI with the network variable value directly
-            mouseOfferingsText.text = "Mouse Offerings: " + networkMouseOfferings.Value.ToString();
+            // Display the total mouse offerings score for all players
+            mouseOfferingsText.text = "Mouse Offerings: " + totalMouseOfferings.Value.ToString();
         }
 
         if (statueScoreText != null)
         {
-            // Update the UI with the network variable value directly
-            statueScoreText.text = "Statue Score: " + networkStatueScore.Value.ToString();
+            // Display the total statue score for all players
+            statueScoreText.text = "Statue Score: " + totalStatueScore.Value.ToString();
         }
     }
 
@@ -110,6 +112,7 @@ public class PlayerCollision : NetworkBehaviour
             }
         }
 
+        // Water exit logic
         if (other.CompareTag("Water") && playerController.isWaterWorld == true)
         {
             playerController.ExitWater();
@@ -120,7 +123,8 @@ public class PlayerCollision : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void UpdateMouseOfferingsScoreServerRpc(int addValue, ulong clientId)
     {
-        networkMouseOfferings.Value += addValue;  // Add value to the score on the server
+        networkMouseOfferings.Value += addValue;  // Add value to the player's score
+        totalMouseOfferings.Value += addValue;  // Update the total mouse offerings score
         Debug.Log("The Mouse Offerings score of player " + clientId + " is " + networkMouseOfferings.Value);
         NotifyMouseOfferingsScoreClientRpc(networkMouseOfferings.Value);  // Notify all clients to update their display
     }
@@ -129,7 +133,8 @@ public class PlayerCollision : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void UpdateStatueScoreServerRpc(int addValue, ulong clientId)
     {
-        networkStatueScore.Value += addValue;  // Add value to the statue score on the server
+        networkStatueScore.Value += addValue;  // Add value to the statue score
+        totalStatueScore.Value += addValue;  // Update the total statue score
         Debug.Log("The Statue score of player " + clientId + " is " + networkStatueScore.Value);
         NotifyStatueScoreClientRpc(networkStatueScore.Value);  // Notify all clients to update their display
     }
@@ -146,12 +151,10 @@ public class PlayerCollision : NetworkBehaviour
     [ClientRpc]
     private void NotifyMouseOfferingsScoreClientRpc(int newScore)
     {
-        clientMouseOfferings = newScore;
-
         // Update the UI to reflect the new score
         if (mouseOfferingsText != null)
         {
-            mouseOfferingsText.text = "Mouse Offerings: " + clientMouseOfferings.ToString();
+            mouseOfferingsText.text = "Mouse Offerings: " + newScore.ToString();
         }
     }
 
@@ -159,12 +162,31 @@ public class PlayerCollision : NetworkBehaviour
     [ClientRpc]
     private void NotifyStatueScoreClientRpc(int newScore)
     {
-        clientStatueScore = newScore;
-
         // Update the UI to reflect the new statue score
         if (statueScoreText != null)
         {
-            statueScoreText.text = "Statue Score: " + clientStatueScore.ToString();
+            statueScoreText.text = "Statue Score: " + newScore.ToString();
         }
     }
+
+
+    private void CheckAndStopTimer()
+    {
+        // Check if both network scores have reached 4
+        if (networkStatueScore.Value == 4 && networkMouseOfferings.Value == 4)
+        {
+            Debug.Log("Both statue and mouse offering scores are 4! Stopping the timer...");
+
+            // Stop the game countdown timer
+            if (gamesLevelTimerReference != null)
+            {
+                gamesLevelTimerReference.StopTimerServerRpc(); // Call to stop the timer on the server
+            }
+            else
+            {
+                Debug.LogError("LevelTimer reference is missing!");
+            }
+        }
+    }
+
 }
