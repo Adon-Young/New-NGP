@@ -21,6 +21,10 @@ public class PlayerCollision : NetworkBehaviour
 
     public void Start()
     {
+
+        playerController = GetComponent<NewPlayerController>();
+
+
         // Dynamically find the Mouse Offerings and Statue Score Text objects in the Canvas
         mouseOfferingsText = GameObject.Find("MouseOfferings").GetComponent<TMP_Text>();
         statueScoreText = GameObject.Find("StatueScore").GetComponent<TMP_Text>();
@@ -91,14 +95,11 @@ public class PlayerCollision : NetworkBehaviour
         }
 
         // Water collision logic
-        if (other.CompareTag("Water") && playerController.isWaterWorld == true)
+        if (other.CompareTag("Water"))
         {
             playerController.EnterWater();
         }
-        else if (other.CompareTag("Water") && playerController.isWaterWorld != true)
-        {
-            playerController.EnterWater();
-        }
+ 
     }
 
     void OnTriggerExit2D(Collider2D other)
@@ -111,9 +112,9 @@ public class PlayerCollision : NetworkBehaviour
                 UpdateStatueScoreServerRpc(-1, OwnerClientId);
             }
         }
-
+  
         // Water exit logic
-        if (other.CompareTag("Water") && playerController.isWaterWorld == true)
+        if (other.CompareTag("Water"))
         {
             playerController.ExitWater();
         }

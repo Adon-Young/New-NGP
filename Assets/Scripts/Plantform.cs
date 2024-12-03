@@ -5,7 +5,7 @@ public class Plantform : MonoBehaviour
     public Sprite seedlingSprout; // New sprite for seedling state
     public Sprite grownPlant; // Sprite for the grown plant state
     public BoxCollider2D platformCollider; // Reference to BoxCollider2D component
-
+    NewPlayerController playerController;
     private SpriteRenderer spriteRenderer;
     private bool isPlayerTouching = false; // Track if the player is touching the platform
     private bool isSeedling = false; // Keep track if the plant is a seedling
@@ -16,6 +16,8 @@ public class Plantform : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         platformCollider = GetComponent<BoxCollider2D>();
+        
+
     }
 
     void Update()
@@ -29,8 +31,10 @@ public class Plantform : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        playerController = other.GetComponent<NewPlayerController>();
+
         // Check if the player touches the platform
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && playerController.isPlantWorld == true)
         {
             isPlayerTouching = true;
         }
@@ -38,7 +42,8 @@ public class Plantform : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        playerController = other.GetComponent<NewPlayerController>();
+        if (other.CompareTag("Player") && playerController.isPlantWorld == true)
         {
             isPlayerTouching = false;
         }

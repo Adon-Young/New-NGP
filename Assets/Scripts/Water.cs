@@ -1,63 +1,46 @@
 using UnityEngine;
+using Unity.Netcode;
 
-public class Water : MonoBehaviour
+public class Water : NetworkBehaviour
 {
-    private bool isRising = false; // State of whether the water is rising
+    private NetworkVariable<bool> isRising = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     private float riseSpeed = 0.5f; // Speed at which the water rises
-    private NewPlayerController playerController;
-    private void OnTriggerStay2D(Collider2D other)
-    {
-        // Check if the object we are overlapping with has the Plantform script
-        Plantform plant = other.GetComponent<Plantform>();
-        if (plant != null && plant.IsSeedling) // Only interact if it's in seedling state
-        {
-            // Call the method on the plant to change its state
-            plant.GrowPlant();
-        }
-    }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    void Update()
     {
-        // If the player enters the water, get the player controller
-        if (other.CompareTag("Player"))
+        // Handle water rising logic on the server
+        if (IsServer)
         {
-            playerController = other.GetComponent<NewPlayerController>();
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        // If the player exits the water, clear the player controller
-        if (other.CompareTag("Player"))
-        {
-            playerController = null;
-        }
-    }
-    private void Update()
-    {
-        // Ensure playerController is valid and player is in water world and in water
-        if (playerController != null && playerController.isWaterWorld && playerController.isInWater)
-        {
-            // Check if mouse button is pressed, toggle water rising state
-            if (Input.GetMouseButtonDown(0))
+            if (isRising.Value)
             {
-                ToggleRising();
-            }
-
-            // While the player is in the water, raise the water if the rising state is true
-            if (isRising)
-            {
-                transform.position += new Vector3(0, riseSpeed * Time.deltaTime, 0); // Raise the water
+                transform.position += new Vector3(0, riseSpeed * Time.deltaTime, 0); // Raise the water on the Y-axis
+                Debug.Log("Water is rising. Current position: " + transform.position);
             }
         }
-
-
     }
 
+    // Toggle the water rising state on the server
     private void ToggleRising()
     {
-        isRising = !isRising;
+        isRising.Value = !isRising.Value; // Toggle the rising state
+        Debug.Log("Water rising state toggled: " + isRising.Value);
+    }
+
+    // Request the server to toggle the rising state (for client-side interactions)
+    [ServerRpc(RequireOwnership = false)]
+    public void ToggleRisingOnServerRpc()
+    {
+        ToggleRising();
+    }
+
+    // Handle trigger interactions
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        Plantform plant = other.GetComponent<Plantform>();
+        if (plant != null && plant.IsSeedling) // Check if the other object is a plant in seedling state
+        {
+            plant.GrowPlant(); // Trigger the plant growth
+            Debug.Log("Water triggered plant growth.");
+        }
     }
 }
-
-

@@ -24,7 +24,7 @@ public class NewPlayerController : NetworkBehaviour
     public float waterGravityScale = 2f; // Gravity scale while in water
     public float normalGravityScale = 1f; // Normal gravity scale
     public float waterMoveSpeed = 2f;
- 
+    private Water waterScript;
     //using properties allws me to keep the values private but still usable in my level controller script...
 
     //----------------------------------------------------
@@ -97,6 +97,19 @@ public class NewPlayerController : NetworkBehaviour
         isFrozen = true;
 
     }
+    private void Start()
+    {
+        isInWater = false;
+        GameObject waterObject = GameObject.FindWithTag("Water");  // Or you could use GameObject.Find("Water");
+        if (waterObject != null)
+        {
+            waterScript = waterObject.GetComponent<Water>();  // Get the Water script component
+        }
+        else
+        {
+            Debug.LogError("Water object not found in the scene!");
+        }
+    }
 
     private void Update()
     {
@@ -157,10 +170,10 @@ public class NewPlayerController : NetworkBehaviour
         }
 
         //input for [Water] cat...
-        if (Input.GetMouseButtonDown(0) && !isFrozen && isWaterWorld)
+        if (Input.GetMouseButtonDown(0) && !isFrozen && isWaterWorld && isInWater)
         {
+            waterScript.ToggleRisingOnServerRpc();
             playerAnimatorController.SetBool("isInteracting", true);
-
             StartCoroutine(EndOfAnimation());
         }
 
@@ -266,7 +279,7 @@ public class NewPlayerController : NetworkBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)  
     {
-        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("MovingPlatform"))
+        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("MovingPlatform") || collision.gameObject.CompareTag("FloatingWall"))
         {
             isGrounded = true;
             playerAnimatorController.SetBool("isJumping", false);
@@ -451,11 +464,19 @@ public class NewPlayerController : NetworkBehaviour
     [ServerRpc]
     private void createBulletShotFromClientServerRpc(Vector3 projectilePosition, Quaternion projectileRotation, bool isSpriteFlipped)
     {
+        // Instantiate the projectile
         GameObject spawnedObject = Instantiate(spawnedObjectTransform, projectilePosition, projectileRotation);
         spawnedObject.GetComponent<NetworkObject>().Spawn(true);
 
-        // Pass the flip state to the projectile
+        // Get the ProjectileMovement component
         ProjectileMovement projectileMovement = spawnedObject.GetComponent<ProjectileMovement>();
+
+        // Set the sprite flip state
         projectileMovement.isSpriteFlipped = isSpriteFlipped;
+
+        // Calculate the shooting direction and set the velocity on the server
+        Vector2 shootingDirection = isSpriteFlipped ? Vector2.left : Vector2.right;
+        projectileMovement.SetVelocity(shootingDirection * projectileMovement.projectileSpeed);
     }
+
 }
