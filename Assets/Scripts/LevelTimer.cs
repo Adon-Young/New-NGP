@@ -18,10 +18,10 @@ public class LevelTimer : NetworkBehaviour
     private float timeTaken = 0f;
 
     // Network variables for countdown, timer, score, and bools
-    private NetworkVariable<MyScoreMechanics> onlineScoreData = new NetworkVariable<MyScoreMechanics>(new MyScoreMechanics { }, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<MyScoreMechanics> onlineScoreData = new NetworkVariable<MyScoreMechanics>(new MyScoreMechanics { }, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     // Network variable for countdown state
-    private NetworkVariable<int> countdownValue = new NetworkVariable<int>(3, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server); // Start countdown from 3
+    public NetworkVariable<int> countdownValue = new NetworkVariable<int>(3, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server); // Start countdown from 3
 
     [System.Serializable]
     public struct MyScoreMechanics : INetworkSerializable

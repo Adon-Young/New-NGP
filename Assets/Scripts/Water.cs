@@ -3,7 +3,7 @@ using Unity.Netcode;
 
 public class Water : NetworkBehaviour
 {
-    private NetworkVariable<bool> isRising = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<bool> isRising = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     private float riseSpeed = 0.5f; // Speed at which the water rises
 
     void Update()

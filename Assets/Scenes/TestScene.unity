@@ -2700,6 +2700,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 1883567642}
+        m_TargetAssemblyTypeName: MultiPlayerManager, Assembly-CSharp
+        m_MethodName: ReloadSceneAndResetVariables
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &550794387
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3222,6 +3234,13 @@ MonoBehaviour:
   countdownText: {fileID: 1538615881}
   levelTimer: {fileID: 1042986407}
   timeLimit: 300
+  onlineScoreData:
+    m_InternalValue:
+      levelScore_score: 0
+      endOfLevel_levelComplete: 0
+      endOfCounttDownTimer_timerRunning: 0
+  countdownValue:
+    m_InternalValue: 3
 --- !u!1 &590122633
 GameObject:
   m_ObjectHideFlags: 0
@@ -12891,6 +12910,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3391b5b0c2202c64bbdc7dd52656c609, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  waterIsRisingScript: {fileID: 0}
+  playerCollisionScript: {fileID: 0}
+  newPlayerControllerScript: {fileID: 0}
+  levelTimerScript: {fileID: 0}
+  endOfGameScript: {fileID: 0}
+  beginGameScript: {fileID: 0}
   hostButton: {fileID: 1427857549}
   serverButton: {fileID: 1108541593}
   clientButton: {fileID: 872399649}

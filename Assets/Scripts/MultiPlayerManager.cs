@@ -5,9 +5,20 @@ using TMPro; // Add this to use TextMeshPro
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using static LevelTimer;
+using static NewPlayerController;
+using Unity.Collections;
 
 public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehaviour
 {
+    //script references...
+    public Water waterIsRisingScript;
+    public PlayerCollision playerCollisionScript;
+    public NewPlayerController newPlayerControllerScript;
+    public LevelTimer levelTimerScript;
+    public EndOfGame endOfGameScript;
+    public BeginGame beginGameScript;
+
     private Dictionary<ulong, GameObject> playerObjects = new Dictionary<ulong, GameObject>();
     [SerializeField] private Button hostButton;
     [SerializeField] private Button serverButton;
@@ -15,14 +26,72 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
 
     // Variable to track the maximum number of players
     public int maximumPlayerCount = 4; // capping it at 4 players per server
-
     // Network variable to hold the current player count (synced across the network)
     public NetworkVariable<int> currentPlayerCount = new NetworkVariable<int>(0);
-
- 
-
     // New TMP_Text field to display current player count
     [SerializeField] private TMP_Text playerCountText; // Reference to the TextMeshPro UI text element
+
+    //--------------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------------
+    public void ResetGameVariables()
+    {
+        // Reset WaterIsRising
+        waterIsRisingScript.isRising.Value = false;
+
+        // Reset PlayerCollision network variables
+        playerCollisionScript.networkMouseOfferings.Value = 0;
+        playerCollisionScript.networkStatueScore.Value = 0;
+        PlayerCollision.totalMouseOfferings.Value = 0;
+        PlayerCollision.totalStatueScore.Value = 0;
+        playerCollisionScript.mouseOnCatVisible.Value = false;
+
+        // Reset NewPlayerController's network variable
+        newPlayerControllerScript.onlinePlayerData.Value = new MyTransferrableData
+        {
+            playerTag = new FixedString128Bytes(""),
+            rValue = 0f,
+            gValue = 0f,
+            bValue = 0f,
+            aValue = 0f
+        };
+
+        // Reset sprite flipped status
+        newPlayerControllerScript.isSpriteFlipped.Value = false;
+
+        // Reset MultiplayerManager's currentPlayerCount
+        currentPlayerCount.Value = 0;
+
+        // Reset LevelTimer's countdown value
+        levelTimerScript.countdownValue.Value = 3;
+
+        // Reset MyScoreMechanics in MultiplayerManager
+        levelTimerScript.onlineScoreData.Value = new MyScoreMechanics
+        {
+            levelScore_score = 0,
+            endOfLevel_levelComplete = false,
+            endOfCounttDownTimer_timerRunning = false
+        };
+
+        // Reset EndOfGame's gameEnded
+        EndOfGame.gameEnded.Value = false;
+
+        // Reset BeginGame's characterSelected
+        beginGameScript.characterSelected.Value = 0;
+
+        Debug.Log("All network variables have been reset.");
+    }
+
+    
+    public void ReloadSceneAndResetVariables()
+    {
+        // Reload the scene first
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+        // After scene reload, reset all variables
+        ResetGameVariables();
+    }
+    //--------------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------------
 
     private void Awake()
     {
