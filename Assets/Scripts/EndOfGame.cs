@@ -1,12 +1,15 @@
 using UnityEngine;
 using Unity.Netcode;
+using System;
 
-public class EndOfGame : MonoBehaviour
+public class EndOfGame : NetworkBehaviour
 {
     public LevelTimer levelTimer; // Reference to the LevelTimer script
     public GameObject LearerboardScreen;
     public GameObject playerHUD;
-    private bool gameEnded = false;
+
+    // Change to a NetworkVariable to sync across all clients
+    public static NetworkVariable<bool> gameEnded = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     private void Update()
     {
@@ -16,14 +19,19 @@ public class EndOfGame : MonoBehaviour
             return;
         }
 
-        if (!gameEnded && PlayerCollision.totalMouseOfferings.Value == 4 && PlayerCollision.totalStatueScore.Value == 4)
+        // Check for game end conditions
+        if (!gameEnded.Value && PlayerCollision.totalMouseOfferings.Value == 4 && PlayerCollision.totalStatueScore.Value == 4)
         {
-            if (levelTimer.IsServer)
+            if (IsServer) // Only the server can stop the timer and set the game end
             {
-                levelTimer.StopTimerServerRpc();
+                levelTimer.StopTimerServerRpc(); // Stop the timer on the server
                 Debug.Log("Game timer stopped! Conditions met.");
-                gameEnded = true; // Prevent further calls
-                DisplayLeaderboard();
+
+                // Update gameEnded on the server and trigger the update for clients
+                gameEnded.Value = true; // Sync game end across all clients
+
+                // Call ClientRpc to trigger all clients to display the leaderboard
+                DisplayLeaderboardClientRpc();
             }
             else
             {
@@ -32,31 +40,16 @@ public class EndOfGame : MonoBehaviour
         }
     }
 
-    
-
-    public void DisplayLeaderboard()
+    // ClientRpc to update the UI for all clients
+    [ClientRpc]
+    public void DisplayLeaderboardClientRpc()
     {
-        //play network audio here and then display the game leaderboard and freeze the players again like at the beginning.
-        NewPlayerController.FreezePlayer();//no more movement or actions
-        LearerboardScreen.SetActive(true);
-        playerHUD.SetActive(false);
+        // This method will be called on all clients to display the leaderboard
+        // Freeze player actions on all clients
+        NewPlayerController.FreezePlayer();
+
+        // Hide the HUD and show the leaderboard after freezing
+        playerHUD.SetActive(false); // Hide the HUD
+        LearerboardScreen.SetActive(true); // Show the leaderboard screen
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

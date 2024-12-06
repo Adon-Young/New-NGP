@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using TMPro; // Add this to use TextMeshPro
 using System.Linq;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehaviour
 {
@@ -95,6 +96,8 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
 
            
         }
+       
+
     }
 
     public int GetCurrentPlayerCount()
@@ -154,5 +157,6 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
                 playerObjects.Remove(clientId); // Remove the reference from the dictionary
             }
         }
+       
     }
 }

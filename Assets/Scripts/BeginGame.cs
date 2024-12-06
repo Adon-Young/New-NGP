@@ -4,12 +4,12 @@ using Unity.Netcode;
 using UnityEngine;
 
 public class BeginGame : NetworkBehaviour
-{   
+{
     public NetworkVariable<int> characterSelected = new NetworkVariable<int>(0);  // Score for Mouse Offerings
     private int numberOfCharactersSelected = 0;  // Local score for Mouse Offerings
     LevelTimer gamesLevelTimerReference;
     public GameObject charSelectionScreen;
-  
+
     // Start is called before the first frame update
     private void Awake()
     {
@@ -56,7 +56,7 @@ public class BeginGame : NetworkBehaviour
             Debug.Log("Character has been selected");
             UpdateCharacterSelectionServerRpc(1, NetworkManager.Singleton.LocalClientId); // Notify the server
         }
-      
+
     }
     //players shouldnt be able to select more than oonce as ive added in the blockers for the buttoons but just in case...
     private bool HasAlreadySelected()
@@ -74,7 +74,7 @@ public class BeginGame : NetworkBehaviour
             return;
         }
 
-        if (characterSelected.Value == 4)
+        if (characterSelected.Value == 4 && !EndOfGame.gameEnded.Value)  // Make sure game hasn't ended
         {
             Debug.Log("All players have selected their characters! Transitioning...");
 
@@ -92,6 +92,7 @@ public class BeginGame : NetworkBehaviour
                 Debug.LogError("LevelTimer reference is missing!");
             }
         }
-    }
 
+
+    }
 }
