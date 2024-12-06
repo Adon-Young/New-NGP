@@ -75,7 +75,11 @@ public class NewPlayerController : NetworkBehaviour
         Debug.Log("Player is unfrozen!");
     }
 
-
+    public static void FreezePlayer()
+    {
+        isFrozen = true;
+        Debug.Log("Player is unfrozen!");
+    }
 
     public void Awake()
     {

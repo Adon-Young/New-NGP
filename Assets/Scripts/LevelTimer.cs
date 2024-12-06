@@ -66,24 +66,24 @@ public class LevelTimer : NetworkBehaviour
 
     private IEnumerator CountdownCoroutine()
     {
-        if (isGameOver) yield break; // Prevent countdown if the game is over
-
         for (int i = 3; i > 0; i--)
         {
             countdownValue.Value = i; // Sync countdown value across network
+            countdownText.text = i.ToString(); // Display the countdown number
             yield return new WaitForSeconds(1f);
         }
 
         countdownValue.Value = 0; // Countdown complete
-        UpdateTimerTextClientRpc(timeTaken); // Notify clients that the countdown is done
-        yield return new WaitForSeconds(1f); // Wait briefly before starting the timer
+        countdownText.text = ""; // Clear the countdown text
+
+        // Call ClientRpc to hide the countdown text for all clients
+        HideCountdownTextClientRpc();
+
+        yield return new WaitForSeconds(1f); // Wait briefly before starting the game timer
 
         // Start the game timer on the server
-        if (!isGameOver) // Double-check the game state before starting the timer
-        {
-            timerRunning = true;  // Start the level timer
-            UpdateOnlineDataUsingLocalValues(); // Sync state to all clients
-        }
+        timerRunning = true;  // Start the level timer
+        UpdateOnlineDataUsingLocalValues(); // Sync state to all clients
     }
 
     // Calculate score based on time remaining
@@ -217,5 +217,12 @@ public class LevelTimer : NetworkBehaviour
     {
         score = finalScore; // Update the local score for the client
         UpdateScoreText(); // Refresh the displayed score on the client side
+    }
+
+    [ClientRpc]
+public void HideCountdownTextClientRpc()
+    {
+        countdownText.enabled = false; // Hide the countdown text on all clients
+        countdownText.text = ""; // Clear the countdown text
     }
 }

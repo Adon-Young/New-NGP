@@ -19,15 +19,10 @@ public class BeginGame : NetworkBehaviour
         }
     }
 
-
-
-
-
     public void Update()
     {
         OnAllPlayersSelected();
     }
-
 
 
 

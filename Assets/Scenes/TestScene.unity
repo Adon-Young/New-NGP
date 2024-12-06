@@ -4700,6 +4700,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelTimer: {fileID: 580663073}
+  LearerboardScreen: {fileID: 1813221562}
+  playerHUD: {fileID: 1511267514}
 --- !u!1 &789799348
 GameObject:
   m_ObjectHideFlags: 0
@@ -14697,21 +14699,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f180f9df045c5a4c81aa2729c37efcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <IsLocalPlayer>k__BackingField: 0
-  <IsOwner>k__BackingField: 0
-  <IsServer>k__BackingField: 0
-  <ServerIsHost>k__BackingField: 0
-  <IsClient>k__BackingField: 0
-  <IsHost>k__BackingField: 0
-  <IsOwnedByServer>k__BackingField: 0
-  <IsSpawned>k__BackingField: 0
-  m_NetworkObject: {fileID: 0}
-  <NetworkObjectId>k__BackingField: 0
-  <NetworkBehaviourId>k__BackingField: 0
-  NetworkBehaviourIdCache: 0
-  <OwnerClientId>k__BackingField: 0
-  m_VarInit: 0
-  <m_TargetIdBeingSynchronized>k__BackingField: 0
 --- !u!1 &2110349650
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,7 +4,8 @@ using Unity.Netcode;
 public class EndOfGame : MonoBehaviour
 {
     public LevelTimer levelTimer; // Reference to the LevelTimer script
-
+    public GameObject LearerboardScreen;
+    public GameObject playerHUD;
     private bool gameEnded = false;
 
     private void Update()
@@ -22,6 +23,7 @@ public class EndOfGame : MonoBehaviour
                 levelTimer.StopTimerServerRpc();
                 Debug.Log("Game timer stopped! Conditions met.");
                 gameEnded = true; // Prevent further calls
+                DisplayLeaderboard();
             }
             else
             {
@@ -29,4 +31,32 @@ public class EndOfGame : MonoBehaviour
             }
         }
     }
+
+    
+
+    public void DisplayLeaderboard()
+    {
+        //play network audio here and then display the game leaderboard and freeze the players again like at the beginning.
+        NewPlayerController.FreezePlayer();//no more movement or actions
+        LearerboardScreen.SetActive(true);
+        playerHUD.SetActive(false);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
