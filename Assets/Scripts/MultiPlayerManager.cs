@@ -18,8 +18,7 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
     // Network variable to hold the current player count (synced across the network)
     public NetworkVariable<int> currentPlayerCount = new NetworkVariable<int>(0);
 
-    // Reference to the spawn point script
-    private SpawnPoints spawnPointScript;
+ 
 
     // New TMP_Text field to display current player count
     [SerializeField] private TMP_Text playerCountText; // Reference to the TextMeshPro UI text element
@@ -94,7 +93,7 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
                 currentPlayerCount.Value = GetCurrentPlayerCount(); // Set the network variable to the current count
             }
 
-            SpawnPlayer(clientId);
+           
         }
     }
 
@@ -103,27 +102,7 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
         return NetworkManager.Singleton.ConnectedClients.Count;
     }
 
-    private void SpawnPlayer(ulong clientId)
-    {
-        if (!IsServer) return; // Only the server should handle spawning
 
-        Transform spawnPoint = spawnPointScript.GetAvailableSpawnPoint(); // Get an available spawn point
-        if (spawnPoint == null)
-        {
-            Debug.LogError("No available spawn points!"); // Handle no available spawn points
-            return;
-        }
-
-        // Instantiate the player prefab (make sure you assign this in the Inspector)
-        var playerPrefab = Resources.Load<GameObject>("PlayerPrefab"); // Load your player prefab from Resources
-        var playerObject = Instantiate(playerPrefab, spawnPoint.position, spawnPoint.rotation);
-
-        // Spawn the player in the network
-        playerObject.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId);
-
-        // Store the player object in the dictionary
-        playerObjects[clientId] = playerObject;
-    }
 
     // New method to update the displayed player count in the UI
     private void UpdatePlayerCountText()

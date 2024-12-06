@@ -3122,7 +3122,6 @@ GameObject:
   - component: {fileID: 580663069}
   - component: {fileID: 580663071}
   - component: {fileID: 580663070}
-  - component: {fileID: 580663072}
   - component: {fileID: 580663073}
   m_Layer: 0
   m_Name: Level 1 Scenes
@@ -3195,23 +3194,6 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &580663072
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 580663068}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71e29beb141d31e43ac430d2d2d9989b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spawnPoints:
-  - {fileID: 2060284668}
-  - {fileID: 1722151269}
-  - {fileID: 1606743217}
-  - {fileID: 1582648686}
 --- !u!114 &580663073
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4646,8 +4628,9 @@ GameObject:
   - component: {fileID: 760840609}
   - component: {fileID: 760840607}
   - component: {fileID: 760840608}
+  - component: {fileID: 760840610}
   m_Layer: 0
-  m_Name: CharCountScript
+  m_Name: LevelController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4704,6 +4687,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &760840610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 760840606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb22994a498e92f438a0f9f6c875dd69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelTimer: {fileID: 580663073}
 --- !u!1 &789799348
 GameObject:
   m_ObjectHideFlags: 0
@@ -11110,11 +11106,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1283423a14bcea45be11cee94febe99, type: 3}
---- !u!4 &1582648686 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8468190652465751084, guid: d1283423a14bcea45be11cee94febe99, type: 3}
-  m_PrefabInstance: {fileID: 1582648685}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1601989905
 GameObject:
   m_ObjectHideFlags: 0
@@ -11214,11 +11205,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1283423a14bcea45be11cee94febe99, type: 3}
---- !u!4 &1606743217 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8468190652465751084, guid: d1283423a14bcea45be11cee94febe99, type: 3}
-  m_PrefabInstance: {fileID: 1606743216}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1633258805
 GameObject:
   m_ObjectHideFlags: 0
@@ -11840,11 +11826,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1283423a14bcea45be11cee94febe99, type: 3}
---- !u!4 &1722151269 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8468190652465751084, guid: d1283423a14bcea45be11cee94febe99, type: 3}
-  m_PrefabInstance: {fileID: 1722151268}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1723061351
 GameObject:
   m_ObjectHideFlags: 0
@@ -14294,11 +14275,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2055378553}
   m_CullTransparentMesh: 1
---- !u!4 &2060284668 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8468190652465751084, guid: d1283423a14bcea45be11cee94febe99, type: 3}
-  m_PrefabInstance: {fileID: 3915465790160957411}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2064189298
 GameObject:
   m_ObjectHideFlags: 0

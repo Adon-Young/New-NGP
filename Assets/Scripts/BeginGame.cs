@@ -72,10 +72,15 @@ public class BeginGame : NetworkBehaviour
 
     private void OnAllPlayersSelected()
     {
+        // Check if the game is already over to prevent unintended restarts
+        if (gamesLevelTimerReference != null && gamesLevelTimerReference.IsGameOver)
+        {
+            Debug.LogWarning("Cannot start the game. The game is already over.");
+            return;
+        }
+
         if (characterSelected.Value == 4)
         {
-           
-
             Debug.Log("All players have selected their characters! Transitioning...");
 
             // Transition UI
@@ -85,7 +90,6 @@ public class BeginGame : NetworkBehaviour
             // Start game countdown timer
             if (gamesLevelTimerReference != null)
             {
-                
                 gamesLevelTimerReference.StartTimerServerRpc(); // Trigger the countdown and timer start
             }
             else
@@ -94,4 +98,5 @@ public class BeginGame : NetworkBehaviour
             }
         }
     }
+
 }

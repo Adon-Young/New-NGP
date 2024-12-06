@@ -9,7 +9,8 @@ public class LevelTimer : NetworkBehaviour
     public TMP_Text scoreText;
     public TMP_Text countdownText;
     public TMP_Text levelTimer;
-
+    private bool isGameOver = false; // Tracks if the game has ended
+    public bool IsGameOver => isGameOver;
     public int timeLimit = 300;
     private int score;
     private bool timerRunning = false;
@@ -65,6 +66,8 @@ public class LevelTimer : NetworkBehaviour
 
     private IEnumerator CountdownCoroutine()
     {
+        if (isGameOver) yield break; // Prevent countdown if the game is over
+
         for (int i = 3; i > 0; i--)
         {
             countdownValue.Value = i; // Sync countdown value across network
@@ -76,14 +79,18 @@ public class LevelTimer : NetworkBehaviour
         yield return new WaitForSeconds(1f); // Wait briefly before starting the timer
 
         // Start the game timer on the server
-        timerRunning = true;  // Start the level timer
-        UpdateOnlineDataUsingLocalValues(); // Sync state to all clients
+        if (!isGameOver) // Double-check the game state before starting the timer
+        {
+            timerRunning = true;  // Start the level timer
+            UpdateOnlineDataUsingLocalValues(); // Sync state to all clients
+        }
     }
 
     // Calculate score based on time remaining
     public void CalculateScore()
     {
         score = (int)((timeLimit - timeTaken) * 10);
+        Debug.Log($"Calculating Score: TimeLimit: {timeLimit}, TimeTaken: {timeTaken}, Score: {score}");
         UpdateScoreText();
     }
 
@@ -140,6 +147,12 @@ public class LevelTimer : NetworkBehaviour
     [ServerRpc]
     public void StartTimerServerRpc()
     {
+        if (isGameOver) // Prevent starting the timer if the game is over
+        {
+            Debug.LogWarning("Cannot start the timer. The game is already over.");
+            return;
+        }
+
         if (timerRunning) // Check if timer is already running
         {
             Debug.LogWarning("Timer already running. Cannot start again.");
@@ -155,16 +168,23 @@ public class LevelTimer : NetworkBehaviour
         StartCoroutine(CountdownCoroutine());
     }
 
+
     [ServerRpc]
     public void StopTimerServerRpc()
     {
+        if (isGameOver) return; // Prevent re-triggering stop logic if already stopped
+
+        levelComplete = true;
         timerRunning = false; // Stop the timer on the server
+        isGameOver = true; // Mark the game as over
         CalculateScore(); // Calculate the score on the server
 
         // Update all clients with the final state
         UpdateOnlineDataUsingLocalValues();
         UpdateTimerTextClientRpc(timeTaken);
         UpdateScoreClientRpc(score);
+
+        Debug.Log("Game over. Timer stopped and score calculated.");
     }
 
     [ServerRpc]
