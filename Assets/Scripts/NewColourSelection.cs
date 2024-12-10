@@ -2,6 +2,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using static PlayerCollision;
 
 public class NewColourSelection : NetworkBehaviour
 {
@@ -47,8 +48,15 @@ public class NewColourSelection : NetworkBehaviour
             if (playerController != null)
             {
                 playerController.SetPlayerNameTagAndColour(playerTag, playerColor);
-                
 
+                var playerCollision = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerCollision>();
+                if (playerCollision != null)
+                {
+                    playerCollision.SetPlayerType(playerTag);
+                    Debug.Log($"Character selected: {playerTag}, Color: {playerColor}, PlayerType: {playerCollision.GetCurrentPlayerType()}");
+                }
+
+           
                 // Set player as ready
                 playersReadyCount++;
 
@@ -84,7 +92,7 @@ public class NewColourSelection : NetworkBehaviour
             }
         }
     }
-
+ 
     // Disables all character buttons except the one the player selected
     private void DisableOtherButtonsLocally()
     {
@@ -204,12 +212,6 @@ public class NewColourSelection : NetworkBehaviour
         }
         GetComponent<Button>().interactable = true;
     }
-
-
-   
-
-
-
 
 
 }

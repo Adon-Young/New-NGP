@@ -6,6 +6,7 @@ using System.Collections;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
+using static PlayerCollision;
 
 public class NewPlayerController : NetworkBehaviour
 {
@@ -13,18 +14,23 @@ public class NewPlayerController : NetworkBehaviour
      * or want to send data over the network that doesnt need to be sent. for exampleif i had 1 sprite and i coded it to change colour
      * to match each players cat and sent it over the network that would be unnecessary as only the players locally will need to see those changes, therefore they dont need to communicate
      with the other players online. so better keeping it all local except the player movement and actions along with platforms and objects that are shared between worlds...*/
-     public  bool isWaterWorld = false;
-     public  bool isFireWorld = false;
-     public  bool isPlantWorld = false;
-     public  bool isMagicWorld = false;
-     private static bool isFrozen = true;//instead of having it set to true for all over network testing it locally
-     private bool gravityToggle = false;
+
+    public enum WorldType { Fire, Water, Magic, Plant }
+    public WorldType worldType;
+
+    public bool isWaterWorld = false;
+    public bool isFireWorld = false;
+    public bool isPlantWorld = false;
+    public bool isMagicWorld = false;
+    private static bool isFrozen = true;//instead of having it set to true for all over network testing it locally
+    private bool gravityToggle = false;
     //------------------------------------------
     public bool isInWater = false;
     public float waterGravityScale = 2f; // Gravity scale while in water
     public float normalGravityScale = 1f; // Normal gravity scale
     public float waterMoveSpeed = 2f;
     private Water waterScript;
+    private Color currentPlayerColor;
     //using properties allws me to keep the values private but still usable in my level controller script...
 
     //----------------------------------------------------
@@ -91,7 +97,7 @@ public class NewPlayerController : NetworkBehaviour
         mouseGameObject = this.GameObject().transform.GetChild(1).gameObject;//getting the mouse game object child
         mouseSpriteRenderer = mouseGameObject.GetComponent<SpriteRenderer>(); //getting the sprite renderer of that mouse
         playersRB.freezeRotation = true;
-        
+
         Camera mainCamera = Camera.main;
         if (mainCamera != null)
         {
@@ -103,6 +109,9 @@ public class NewPlayerController : NetworkBehaviour
     }
     private void Start()
     {
+
+       
+
         isInWater = false;
         GameObject waterObject = GameObject.FindWithTag("Water");  // Or you could use GameObject.Find("Water");
         if (waterObject != null)
@@ -212,7 +221,7 @@ public class NewPlayerController : NetworkBehaviour
             StartCoroutine(EndOfAnimation());
         }
         //---------------------------------------------------------------------------------------------------
-     
+
     }
 
     private IEnumerator EndOfAnimation()
@@ -281,7 +290,7 @@ public class NewPlayerController : NetworkBehaviour
     }
 
 
-    private void OnCollisionEnter2D(Collision2D collision)  
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("MovingPlatform") || collision.gameObject.CompareTag("FloatingWall"))
         {
@@ -292,7 +301,7 @@ public class NewPlayerController : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-    
+
         // Set the initial player data for the local player
         UpdatePlayerVisuals(onlinePlayerData.Value);
 
@@ -313,14 +322,14 @@ public class NewPlayerController : NetworkBehaviour
             cameraFollow.playerTarget = transform;
         }
 
-        if(IsServer)
+        if (IsServer)
         {
             UpdateExistingPlayers();
         }
 
 
         // Ensure all players are updated for new clients
-        
+
 
         base.OnNetworkSpawn();
     }
@@ -343,6 +352,9 @@ public class NewPlayerController : NetworkBehaviour
     }
     private void UpdatePlayerVisuals(MyTransferrableData playerData)
     {
+
+        currentPlayerColor = new Color(playerData.rValue, playerData.gValue, playerData.bValue);//to get transferred to the apropriate mouse object
+
         // Check if this is the local player
         if (IsOwner)
         {
@@ -360,6 +372,15 @@ public class NewPlayerController : NetworkBehaviour
         // Update player name
         playerName.text = playerData.playerTag.ToString();
     }
+
+    public Color GetPlayerColor()
+    {
+
+        return currentPlayerColor;
+    }
+
+
+
     // Function to be triggered by button press
     public void OnSelectTagAndColor(string newPlayerTag, Color newPlayerColour)
     {
@@ -412,10 +433,10 @@ public class NewPlayerController : NetworkBehaviour
     {
         //this checks the colour of the player and triggersthe bool that will determine which wolrd/ background that character should see locally...#
         //checking against each of the possible character colours...
-        Color redTargetColour = new Color(1.00f,0.00f,0.00f,1.00f);
-        Color blueTargetColour = new Color(0.00f, 0.6156863f,1.00f,1.00f);
-        Color greenTargetColour = new Color(0.00f,1.00f,0.00f,1.00f);
-        Color purpleTargetColour = new Color(0.8313726f, 0.2705882f,1.00f,1.00f);
+        Color redTargetColour = new Color(1.00f, 0.00f, 0.00f, 1.00f);
+        Color blueTargetColour = new Color(0.00f, 0.6156863f, 1.00f, 1.00f);
+        Color greenTargetColour = new Color(0.00f, 1.00f, 0.00f, 1.00f);
+        Color purpleTargetColour = new Color(0.8313726f, 0.2705882f, 1.00f, 1.00f);
 
         if (IsOwner)
         {

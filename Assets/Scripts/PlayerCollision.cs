@@ -4,6 +4,10 @@ using TMPro;
 
 public class PlayerCollision : NetworkBehaviour
 {
+    public enum PlayerType { Fire, Water, Magic, Plant }
+    public PlayerType playerType;
+
+
     // Network variables to track individual player scores and total scores
     public NetworkVariable<int> networkMouseOfferings = new NetworkVariable<int>(0);  // Player's mouse score
     public NetworkVariable<int> networkStatueScore = new NetworkVariable<int>(0);  // Player's statue score
@@ -68,22 +72,69 @@ public class PlayerCollision : NetworkBehaviour
         }
     }
 
+  
+
+    public void SetPlayerType(string tag)
+    {
+        switch (tag)
+        {
+            case "Water":
+                playerType = PlayerType.Water;
+                playerController.worldType = NewPlayerController.WorldType.Water;
+                break;
+            case "Fire":
+                playerType = PlayerType.Fire;
+                playerController.worldType = NewPlayerController.WorldType.Fire;
+                break;
+            case "Plant":
+                playerType = PlayerType.Plant;
+                playerController.worldType = NewPlayerController.WorldType.Plant;
+                break;
+            case "Magic":
+                playerType = PlayerType.Magic;
+                playerController.worldType = NewPlayerController.WorldType.Magic;
+                break;
+            default:
+                Debug.LogWarning("Unknown player tag: " + tag);
+                break;
+        }
+
+        // Debug to confirm assignment
+        Debug.Log("PlayerType set to: " + playerType);
+    }
+  public PlayerType GetCurrentPlayerType()
+    {
+        return playerType;
+    }
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Mouse"))
         {
-            if (NetworkManager.Singleton.LocalClientId == OwnerClientId)
+            // Get the Mouse component from the collided object
+            MouseOffering mouse = other.GetComponent<MouseOffering>();
+
+            if (mouse != null && mouse.mouseType.ToString() == playerType.ToString())
             {
-                // Update the mouse offerings score and notify all clients
-                UpdateMouseOfferingsScoreServerRpc(1, OwnerClientId);
+                if (NetworkManager.Singleton.LocalClientId == OwnerClientId)
+                {
+                    // Update the mouse offerings score and notify all clients
+                    UpdateMouseOfferingsScoreServerRpc(1, OwnerClientId);
 
-                // Destroy the mouse object after scoring
-                Destroy(other.gameObject);
+                    // Destroy the mouse object after scoring on the server
+                    DestroyMouseServerRpc(other.gameObject.GetComponent<NetworkObject>());
 
-                // Set the mouse sprite child object to be visible
-                SetMouseOnCatVisibleServerRpc(true);
+                    // Optionally, set the mouse sprite visible
+                    SetMouseOnCatVisibleServerRpc(true);
+                }
+            }
+            else
+            {
+                Debug.Log("This mouse cannot be collected by this player!");
             }
         }
+    
+
 
         if (other.CompareTag("Statue"))
         {
@@ -120,6 +171,17 @@ public class PlayerCollision : NetworkBehaviour
         }
     }
 
+
+    [ServerRpc(RequireOwnership = false)]
+    public void DestroyMouseServerRpc(NetworkObjectReference mouseReference)
+    {
+        if (mouseReference.TryGet(out var mouseObject))
+        {
+            mouseObject.Despawn(true); // Despawn from the network
+            Destroy(mouseObject.gameObject); // Destroy locally
+        }
+    }
+
     // ServerRpc to update the mouse offerings score on the server
     [ServerRpc(RequireOwnership = false)]
     public void UpdateMouseOfferingsScoreServerRpc(int addValue, ulong clientId)
@@ -147,6 +209,7 @@ public class PlayerCollision : NetworkBehaviour
         // Update the network variable's value on the server
         mouseOnCatVisible.Value = isVisible;
     }
+
 
     // ClientRpc to notify all clients about the updated mouse offerings score
     [ClientRpc]
