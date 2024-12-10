@@ -5806,6 +5806,22 @@ PrefabInstance:
       propertyPath: InScenePlacedSourceGlobalObjectIdHash
       value: 1439623089
       objectReference: {fileID: 0}
+    - target: {fileID: 6322857773244900765, guid: 7c940199bfbd5f24a8e7f8f6b4d18991, type: 3}
+      propertyPath: m_Color.a
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322857773244900765, guid: 7c940199bfbd5f24a8e7f8f6b4d18991, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322857773244900765, guid: 7c940199bfbd5f24a8e7f8f6b4d18991, type: 3}
+      propertyPath: m_Color.g
+      value: 0.27058825
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322857773244900765, guid: 7c940199bfbd5f24a8e7f8f6b4d18991, type: 3}
+      propertyPath: m_Color.r
+      value: 0.83137256
+      objectReference: {fileID: 0}
     - target: {fileID: 7661845708297940948, guid: 7c940199bfbd5f24a8e7f8f6b4d18991, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 53854605
@@ -8426,6 +8442,22 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 610874257
       objectReference: {fileID: 0}
+    - target: {fileID: 6322857773244900765, guid: 7c940199bfbd5f24a8e7f8f6b4d18991, type: 3}
+      propertyPath: m_Color.a
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322857773244900765, guid: 7c940199bfbd5f24a8e7f8f6b4d18991, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322857773244900765, guid: 7c940199bfbd5f24a8e7f8f6b4d18991, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322857773244900765, guid: 7c940199bfbd5f24a8e7f8f6b4d18991, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7661845708297940948, guid: 7c940199bfbd5f24a8e7f8f6b4d18991, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 48235785
@@ -9153,6 +9185,22 @@ PrefabInstance:
     - target: {fileID: 2355359128798842130, guid: 7c940199bfbd5f24a8e7f8f6b4d18991, type: 3}
       propertyPath: m_Name
       value: MousePrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322857773244900765, guid: 7c940199bfbd5f24a8e7f8f6b4d18991, type: 3}
+      propertyPath: m_Color.a
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322857773244900765, guid: 7c940199bfbd5f24a8e7f8f6b4d18991, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322857773244900765, guid: 7c940199bfbd5f24a8e7f8f6b4d18991, type: 3}
+      propertyPath: m_Color.g
+      value: 0.6156863
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322857773244900765, guid: 7c940199bfbd5f24a8e7f8f6b4d18991, type: 3}
+      propertyPath: m_Color.r
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7996120910438799633, guid: 7c940199bfbd5f24a8e7f8f6b4d18991, type: 3}
       propertyPath: mouseType
@@ -14035,6 +14083,26 @@ PrefabInstance:
     - target: {fileID: 2355359128798842130, guid: 7c940199bfbd5f24a8e7f8f6b4d18991, type: 3}
       propertyPath: m_Name
       value: MousePrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322857773244900765, guid: 7c940199bfbd5f24a8e7f8f6b4d18991, type: 3}
+      propertyPath: m_Color.a
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322857773244900765, guid: 7c940199bfbd5f24a8e7f8f6b4d18991, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322857773244900765, guid: 7c940199bfbd5f24a8e7f8f6b4d18991, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322857773244900765, guid: 7c940199bfbd5f24a8e7f8f6b4d18991, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7996120910438799633, guid: 7c940199bfbd5f24a8e7f8f6b4d18991, type: 3}
+      propertyPath: mouseType
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7996120910438799633, guid: 7c940199bfbd5f24a8e7f8f6b4d18991, type: 3}
       propertyPath: movementRange

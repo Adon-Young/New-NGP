@@ -26,11 +26,7 @@ public class MouseOffering : NetworkBehaviour
 
     void Update()
     {
-        // Only search for the player controller if we haven't found it yet
-        if (!isPlayerControllerFound)
-        {
-            FindPlayerController();
-        }
+
 
         if (IsClient)
         {
@@ -43,10 +39,6 @@ public class MouseOffering : NetworkBehaviour
             MouseMovementFunction();
         }
 
-        if (isPlayerControllerFound)
-        {
-            UpdateMouseColor();
-        }
     }
 
     void MouseMovementFunction()
@@ -76,58 +68,6 @@ public class MouseOffering : NetworkBehaviour
         }
     }
 
-    private void UpdateMouseColor()
-    {
-        if (playerController != null)
-        {
-            Color playerColor = playerController.GetPlayerColor();
 
-            if (IsMatchingMouseAndPlayer(playerController))
-            {
-                mouseSpriteRenderer.color = new Color(playerColor.r, playerColor.g, playerColor.b, 1f);
-            }
-            else
-            {
-                mouseSpriteRenderer.color = new Color(playerColor.r, playerColor.g, playerColor.b, 0.6f);
-            }
-        }
-    }
 
-    private bool IsMatchingMouseAndPlayer(NewPlayerController playerController)
-    {
-        switch (mouseType)
-        {
-            case MouseType.Fire:
-                return playerController.worldType == NewPlayerController.WorldType.Fire;
-            case MouseType.Water:
-                return playerController.worldType == NewPlayerController.WorldType.Water;
-            case MouseType.Magic:
-                return playerController.worldType == NewPlayerController.WorldType.Magic;
-            case MouseType.Plant:
-                return playerController.worldType == NewPlayerController.WorldType.Plant;
-            default:
-                return false;
-        }
-    }
-
-    // This method will dynamically search for the player controller based on the MouseType match
-    private void FindPlayerController()
-    {
-        // Find all players tagged as "Player"
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-
-        foreach (var player in players)
-        {
-            if (player.TryGetComponent(out NewPlayerController foundPlayerController))
-            {
-                // Check if the MouseType matches the WorldType of the found player
-                if (IsMatchingMouseAndPlayer(foundPlayerController))
-                {
-                    playerController = foundPlayerController;  // Assign the found controller
-                    isPlayerControllerFound = true;  // Stop searching once we find the correct player
-                    break;  // Exit the loop
-                }
-            }
-        }
-    }
 }

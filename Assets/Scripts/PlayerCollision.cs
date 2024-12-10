@@ -25,7 +25,7 @@ public class PlayerCollision : NetworkBehaviour
 
     public void Start()
     {
-
+       
         playerController = GetComponent<NewPlayerController>();
 
 
@@ -80,19 +80,19 @@ public class PlayerCollision : NetworkBehaviour
         {
             case "Water":
                 playerType = PlayerType.Water;
-                playerController.worldType = NewPlayerController.WorldType.Water;
+        
                 break;
             case "Fire":
                 playerType = PlayerType.Fire;
-                playerController.worldType = NewPlayerController.WorldType.Fire;
+          
                 break;
             case "Plant":
                 playerType = PlayerType.Plant;
-                playerController.worldType = NewPlayerController.WorldType.Plant;
+          
                 break;
             case "Magic":
                 playerType = PlayerType.Magic;
-                playerController.worldType = NewPlayerController.WorldType.Magic;
+        
                 break;
             default:
                 Debug.LogWarning("Unknown player tag: " + tag);

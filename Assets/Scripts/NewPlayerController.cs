@@ -7,6 +7,8 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
 using static PlayerCollision;
+using static UnityEngine.Animations.AimConstraint;
+using static MouseOffering;
 
 public class NewPlayerController : NetworkBehaviour
 {
@@ -14,9 +16,6 @@ public class NewPlayerController : NetworkBehaviour
      * or want to send data over the network that doesnt need to be sent. for exampleif i had 1 sprite and i coded it to change colour
      * to match each players cat and sent it over the network that would be unnecessary as only the players locally will need to see those changes, therefore they dont need to communicate
      with the other players online. so better keeping it all local except the player movement and actions along with platforms and objects that are shared between worlds...*/
-
-    public enum WorldType { Fire, Water, Magic, Plant }
-    public WorldType worldType;
 
     public bool isWaterWorld = false;
     public bool isFireWorld = false;
@@ -133,7 +132,65 @@ public class NewPlayerController : NetworkBehaviour
         PlayerInput();
         UpdateSpriteFlip();
 
+        ChangeMouseColour();
     }
+
+
+    private void ChangeMouseColour()
+    {
+        // Find all game objects tagged as "Mouse"
+        GameObject[] mouseObjects = GameObject.FindGameObjectsWithTag("Mouse");
+
+        foreach (GameObject mouseObj in mouseObjects)
+        {
+            // Get the MouseOffering component
+            MouseOffering mouseOffering = mouseObj.GetComponent<MouseOffering>();
+
+            if (mouseOffering != null)
+            {
+                // Get the SpriteRenderer component (for sprite-based objects)
+                SpriteRenderer spriteRenderer = mouseObj.GetComponent<SpriteRenderer>();
+
+                if (spriteRenderer != null)
+                {
+                    // Check the world type and apply the appropriate alpha value
+                    if (isFireWorld && mouseOffering.mouseType == MouseType.Fire)
+                    {
+                        SetMouseAlpha(spriteRenderer, 1f);  // Set alpha to 1 for Fire world
+                        Debug.Log("Fire mouse found: " + mouseObj.name);  // Debug log to confirm
+                    }
+                    else if (isWaterWorld && mouseOffering.mouseType == MouseType.Water)
+                    {
+                        SetMouseAlpha(spriteRenderer, 1f);  // Set alpha to 1 for Water world
+                        Debug.Log("Water mouse found: " + mouseObj.name);  // Debug log to confirm
+                    }
+                    else if (isMagicWorld && mouseOffering.mouseType == MouseType.Magic)
+                    {
+                        SetMouseAlpha(spriteRenderer, 1f);  // Set alpha to 1 for Magic world
+                        Debug.Log("Magic mouse found: " + mouseObj.name);  // Debug log to confirm
+                    }
+                    else if (isPlantWorld && mouseOffering.mouseType == MouseType.Plant)
+                    {
+                        SetMouseAlpha(spriteRenderer, 1f);  // Set alpha to 1 for Plant world
+                        Debug.Log("Plant mouse found: " + mouseObj.name);  // Debug log to confirm
+                    }
+                }
+            }
+        }
+    }
+
+    private void SetMouseAlpha(SpriteRenderer spriteRenderer, float alpha)
+    {
+        // Get the current color of the sprite
+        Color color = spriteRenderer.color;
+
+        // Set the new alpha value
+        color.a = alpha;
+
+        // Apply the modified color back to the sprite renderer
+        spriteRenderer.color = color;
+    }
+
 
     private void UpdateSpriteFlip()
     {
