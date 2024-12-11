@@ -30,10 +30,7 @@ public class WallManagement : NetworkBehaviour
         {
             floatingWall.SetActive(false); // Ensure FloatingWall is inactive at the start
         }
-        else
-        {
-            Debug.LogError("FloatingWall reference not set! Please assign it in the Inspector.");
-        }
+  
 
     }
 

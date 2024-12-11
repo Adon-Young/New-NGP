@@ -95,12 +95,8 @@ public class PlayerCollision : NetworkBehaviour
         
                 break;
             default:
-                Debug.LogWarning("Unknown player tag: " + tag);
                 break;
         }
-
-        // Debug to confirm assignment
-        Debug.Log("PlayerType set to: " + playerType);
     }
   public PlayerType GetCurrentPlayerType()
     {
@@ -128,10 +124,7 @@ public class PlayerCollision : NetworkBehaviour
                     SetMouseOnCatVisibleServerRpc(true);
                 }
             }
-            else
-            {
-                Debug.Log("This mouse cannot be collected by this player!");
-            }
+         
         }
     
 
@@ -188,7 +181,7 @@ public class PlayerCollision : NetworkBehaviour
     {
         networkMouseOfferings.Value += addValue;  // Add value to the player's score
         totalMouseOfferings.Value += addValue;  // Update the total mouse offerings score
-        Debug.Log("The Mouse Offerings score of player " + clientId + " is " + networkMouseOfferings.Value);
+    
         NotifyMouseOfferingsScoreClientRpc(networkMouseOfferings.Value);  // Notify all clients to update their display
     }
 
@@ -198,7 +191,7 @@ public class PlayerCollision : NetworkBehaviour
     {
         networkStatueScore.Value += addValue;  // Add value to the statue score
         totalStatueScore.Value += addValue;  // Update the total statue score
-        Debug.Log("The Statue score of player " + clientId + " is " + networkStatueScore.Value);
+    
         NotifyStatueScoreClientRpc(networkStatueScore.Value);  // Notify all clients to update their display
     }
 
@@ -239,17 +232,14 @@ public class PlayerCollision : NetworkBehaviour
         // Check if both network scores have reached 4
         if (networkStatueScore.Value == 4 && networkMouseOfferings.Value == 4)
         {
-            Debug.Log("Both statue and mouse offering scores are 4! Stopping the timer...");
+           
 
             // Stop the game countdown timer
             if (gamesLevelTimerReference != null)
             {
                 gamesLevelTimerReference.StopTimerServerRpc(); // Call to stop the timer on the server
             }
-            else
-            {
-                Debug.LogError("LevelTimer reference is missing!");
-            }
+         
         }
     }
 

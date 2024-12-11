@@ -14,7 +14,7 @@ public class Water : NetworkBehaviour
             if (isRising.Value)
             {
                 transform.position += new Vector3(0, riseSpeed * Time.deltaTime, 0); // Raise the water on the Y-axis
-                Debug.Log("Water is rising. Current position: " + transform.position);
+        
             }
         }
     }
@@ -23,7 +23,7 @@ public class Water : NetworkBehaviour
     private void ToggleRising()
     {
         isRising.Value = !isRising.Value; // Toggle the rising state
-        Debug.Log("Water rising state toggled: " + isRising.Value);
+     
     }
 
     // Request the server to toggle the rising state (for client-side interactions)
@@ -40,7 +40,7 @@ public class Water : NetworkBehaviour
         if (plant != null && plant.IsSeedling) // Check if the other object is a plant in seedling state
         {
             plant.GrowPlant(); // Trigger the plant growth
-            Debug.Log("Water triggered plant growth.");
+        
         }
     }
 }

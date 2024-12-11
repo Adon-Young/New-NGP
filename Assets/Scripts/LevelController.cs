@@ -29,28 +29,25 @@ public class LevelController : NetworkBehaviour
             if (playerController.isWaterWorld)
             {
                 WaterSceneLLv1.SetActive(true);
-                Debug.Log("Water Scene is now visible.");
+  
             }
             if (playerController.isFireWorld)
             {
                 FireSceneLv1.SetActive(true);
-                Debug.Log("Fire Scene is now visible.");
+   
             }
             if (playerController.isPlantWorld)
             {
                 PlantSceneLv1.SetActive(true);
-                Debug.Log("Plant Scene is now visible.");
+ 
             }
             if (playerController.isMagicWorld)
             {
                 MagicSceneLv1.SetActive(true);
-                Debug.Log("Magic Scene is now visible.");
+
             }
         }
-        else
-        {
-            Debug.LogError("PlayerController reference is null!");
-        }
+    
     }
 
 

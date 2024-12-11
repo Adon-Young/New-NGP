@@ -78,7 +78,6 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
         // Reset BeginGame's characterSelected
         beginGameScript.characterSelected.Value = 0;
 
-        Debug.Log("All network variables have been reset.");
     }
 
     
@@ -101,19 +100,19 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
         // Set up the on-click events using delegates
         hostButton.onClick.AddListener(() =>
         {
-            Debug.Log("Hosting game...");
+
             NetworkManager.Singleton.StartHost();
         });
 
         serverButton.onClick.AddListener(() =>
         {
-            Debug.Log("Starting server...");
+
             NetworkManager.Singleton.StartServer();
         });
 
         clientButton.onClick.AddListener(() =>
         {
-            Debug.Log("Joining game as client...");
+
             NetworkManager.Singleton.StartClient();
         });
     }
@@ -198,13 +197,11 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
         if (IsHost)
         {
             // If the host is leaving, simply shut down the server
-            Debug.Log("Host is leaving the game. Shutting down the server...");
             NetworkManager.Singleton.Shutdown(); // Shut down the server
         }
         else if (IsClient)
         {
             // If it's a client, simply disconnect
-            Debug.Log("Client is leaving the game...");
             NetworkManager.Singleton.Shutdown(); // Disconnect the client
         }
     }
@@ -212,8 +209,6 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
     // Callback for when a player disconnects
     private void OnClientDisconnected(ulong clientId)
     {
-        Debug.Log($"Client {clientId} disconnected");
-
         if (IsServer)
         {
             // Update player count when a player leaves

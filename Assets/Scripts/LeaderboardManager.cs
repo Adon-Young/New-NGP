@@ -31,18 +31,12 @@ public class LeaderboardManager : MonoBehaviour
             // Create a new row
             GameObject row = Instantiate(rowPrefab, leaderboardContainer.transform);
 
-            // Debug log the instantiation
-            Debug.Log("Instantiated row for: " + teamNames[i]);
 
             // Set Rank
             TMP_Text rankText = row.transform.Find("RankImage/Text").GetComponent<TMP_Text>();
             if (rankText != null)
             {
                 rankText.text = (i + 1).ToString();
-            }
-            else
-            {
-                Debug.LogError("Rank TMP_Text not found in prefab!");
             }
 
             // Set Team Name
@@ -51,21 +45,15 @@ public class LeaderboardManager : MonoBehaviour
             {
                 teamNameText.text = teamNames[i];
             }
-            else
-            {
-                Debug.LogError("Team Name TMP_Text not found in prefab!");
-            }
+     
             // Set Time
             TMP_Text timeText = row.transform.Find("TimeImage/Text").GetComponent<TMP_Text>();
             if (timeText != null)
             {
                 timeText.text = times[i].ToString("F2") + "s";
-                Debug.Log($"Time for row {i}: {timeText.text}");
+              
             }
-            else
-            {
-                Debug.LogError("Time TMP_Text not found in prefab!");
-            }
+       
 
         }
     }

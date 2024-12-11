@@ -77,13 +77,13 @@ public class NewPlayerController : NetworkBehaviour
     public static void UnfreezePlayer()
     {
         isFrozen = false;
-        Debug.Log("Player is unfrozen!");
+ 
     }
 
     public static void FreezePlayer()
     {
         isFrozen = true;
-        Debug.Log("Player is unfrozen!");
+
     }
 
     public void Awake()
@@ -117,10 +117,7 @@ public class NewPlayerController : NetworkBehaviour
         {
             waterScript = waterObject.GetComponent<Water>();  // Get the Water script component
         }
-        else
-        {
-            Debug.LogError("Water object not found in the scene!");
-        }
+    
     }
 
     private void Update()
@@ -474,9 +471,6 @@ public class NewPlayerController : NetworkBehaviour
             aValue = newPlayerColour.a
         };
 
-        // Debug log to check color values
-        Debug.Log($"Setting color: {newPlayerColour} with tag: {newPlayerTag}");
-
         // Update the NetworkVariable so that all players see the changes
         onlinePlayerData.Value = newData;
         playerName.text = newPlayerTag;
@@ -505,7 +499,7 @@ public class NewPlayerController : NetworkBehaviour
                 isFireWorld = true;
                 isPlantWorld = false;
                 isMagicWorld = false;
-                Debug.Log("the RED world has been selected");
+           
 
             }
 
@@ -516,7 +510,7 @@ public class NewPlayerController : NetworkBehaviour
                 isFireWorld = false;
                 isPlantWorld = false;
                 isMagicWorld = false;
-                Debug.Log("the BLUE world has been selected");
+             
             }
 
             if (spriteRenderer.color == greenTargetColour)
@@ -526,7 +520,7 @@ public class NewPlayerController : NetworkBehaviour
                 isFireWorld = false;
                 isPlantWorld = true;
                 isMagicWorld = false;
-                Debug.Log("the GREEN world has been selected");
+           
             }
 
             if (spriteRenderer.color == purpleTargetColour)
@@ -536,7 +530,7 @@ public class NewPlayerController : NetworkBehaviour
                 isFireWorld = false;
                 isPlantWorld = false;
                 isMagicWorld = true;
-                Debug.Log("the PURPLE world has been selected");
+           
             }
 
         }

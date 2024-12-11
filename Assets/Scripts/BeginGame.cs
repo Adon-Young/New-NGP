@@ -32,13 +32,12 @@ public class BeginGame : NetworkBehaviour
         if (characterSelected.Value < 4) // Ensure only up to 4 characters can be selected
         {
             characterSelected.Value += addValue; // Increment the network variable
-            Debug.Log("Player " + clientId + " selected a character. Total selected: " + characterSelected.Value);
 
             UpdateCharacterSelectionClientRpc(characterSelected.Value); // Notify all clients
         }
         else
         {
-            Debug.LogWarning("All characters have been selected! No more selections allowed.");
+ 
         }
     }
 
@@ -46,14 +45,12 @@ public class BeginGame : NetworkBehaviour
     private void UpdateCharacterSelectionClientRpc(int newScore)
     {
         numberOfCharactersSelected = newScore; // Update the local value
-        Debug.Log("Updated local count to: " + numberOfCharactersSelected);
     }
 
     public void OnCharacterButtonClicked()
     {
         if (IsClient && !HasAlreadySelected()) // Ensure client is valid and hasn't selected yet
         {
-            Debug.Log("Character has been selected");
             UpdateCharacterSelectionServerRpc(1, NetworkManager.Singleton.LocalClientId); // Notify the server
         }
 
@@ -70,13 +67,11 @@ public class BeginGame : NetworkBehaviour
         // Check if the game is already over to prevent unintended restarts
         if (gamesLevelTimerReference != null && gamesLevelTimerReference.IsGameOver)
         {
-            Debug.LogWarning("Cannot start the game. The game is already over.");
             return;
         }
 
         if (characterSelected.Value == 4 && !EndOfGame.gameEnded.Value)  // Make sure game hasn't ended
         {
-            Debug.Log("All players have selected their characters! Transitioning...");
 
             // Transition UI
             charSelectionScreen.SetActive(false);
@@ -87,10 +82,7 @@ public class BeginGame : NetworkBehaviour
             {
                 gamesLevelTimerReference.StartTimerServerRpc(); // Trigger the countdown and timer start
             }
-            else
-            {
-                Debug.LogError("LevelTimer reference is missing!");
-            }
+          
         }
 
 

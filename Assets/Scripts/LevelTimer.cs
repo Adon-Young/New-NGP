@@ -108,7 +108,6 @@ public class LevelTimer : NetworkBehaviour
 
     private void ResetLevel()
     {
-        Debug.Log("Time limit reached! Level reset.");
         timerRunning = false;
         levelComplete = true;  // Mark the level as complete
     }
@@ -120,7 +119,6 @@ public class LevelTimer : NetworkBehaviour
     {
         score = 0;
         UpdateScoreText();
-        Debug.Log("Score reset.");
         UpdateOnlineDataUsingLocalValues(); // Update struct data with the new local values
     }
 
@@ -149,13 +147,11 @@ public class LevelTimer : NetworkBehaviour
     {
         if (isGameOver) // Prevent starting the timer if the game is over
         {
-            Debug.LogWarning("Cannot start the timer. The game is already over.");
             return;
         }
 
         if (timerRunning) // Check if timer is already running
         {
-            Debug.LogWarning("Timer already running. Cannot start again.");
             return;
         }
 
@@ -183,8 +179,6 @@ public class LevelTimer : NetworkBehaviour
         UpdateOnlineDataUsingLocalValues();
         UpdateTimerTextClientRpc(timeTaken);
         UpdateScoreClientRpc(score);
-
-        Debug.Log("Game over. Timer stopped and score calculated.");
     }
 
     [ServerRpc]

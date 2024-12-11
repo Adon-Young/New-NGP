@@ -15,7 +15,6 @@ public class EndOfGame : NetworkBehaviour
     {
         if (levelTimer == null)
         {
-            Debug.LogError("Reference for LevelTimer is missing!");
             return;
         }
 
@@ -25,18 +24,14 @@ public class EndOfGame : NetworkBehaviour
             if (IsServer) // Only the server can stop the timer and set the game end
             {
                 levelTimer.StopTimerServerRpc(); // Stop the timer on the server
-                Debug.Log("Game timer stopped! Conditions met.");
-
+  
                 // Update gameEnded on the server and trigger the update for clients
                 gameEnded.Value = true; // Sync game end across all clients
 
                 // Call ClientRpc to trigger all clients to display the leaderboard
                 DisplayLeaderboardClientRpc();
             }
-            else
-            {
-                Debug.LogError("You are not the server! Timer can only be stopped by the server.");
-            }
+
         }
     }
 

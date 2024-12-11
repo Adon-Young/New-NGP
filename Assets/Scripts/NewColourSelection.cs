@@ -20,14 +20,7 @@ public class NewColourSelection : NetworkBehaviour
 
     private void Start()
     {
-
-     
-
         levelController = FindObjectOfType<LevelController>();
-        if (levelController == null)
-        {
-            Debug.LogError("LevelController not found in the scene!");
-        }
 
         // Initially disable all blocker images
         foreach (Image blockerImage in blockerImages)
@@ -84,11 +77,7 @@ public class NewColourSelection : NetworkBehaviour
                     levelController.WorldChecker(playerController);
                 }
 
-                // Check if all players are ready
-                if (playersReadyCount == maxPlayers)
-                {
-                    StartGame(); // Call the start game function when all players are ready
-                }
+
             }
         }
     }
@@ -135,11 +124,7 @@ public class NewColourSelection : NetworkBehaviour
         }
     }
 
-    // Function to start the game (this can be expanded later with actual game start logic)
-    private void StartGame()
-    {
-        Debug.Log("All players are ready. Starting the game...");
-    }
+
 
     // Networked variable to track the readiness state (if necessary, for syncing across clients)
     private NetworkVariable<bool> isReady = new NetworkVariable<bool>(false);
@@ -169,10 +154,7 @@ public class NewColourSelection : NetworkBehaviour
             }
         }
 
-        if (allReady)
-        {
-            StartGame();
-        }
+   
     }
 
     // This method will be called when a player leaves (or despawns)
