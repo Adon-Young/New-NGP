@@ -154,22 +154,22 @@ public class NewPlayerController : NetworkBehaviour
                     if (isFireWorld && mouseOffering.mouseType == MouseType.Fire)
                     {
                         SetMouseAlpha(spriteRenderer, 1f);  // Set alpha to 1 for Fire world
-                        Debug.Log("Fire mouse found: " + mouseObj.name);  // Debug log to confirm
+                  
                     }
                     else if (isWaterWorld && mouseOffering.mouseType == MouseType.Water)
                     {
                         SetMouseAlpha(spriteRenderer, 1f);  // Set alpha to 1 for Water world
-                        Debug.Log("Water mouse found: " + mouseObj.name);  // Debug log to confirm
+              
                     }
                     else if (isMagicWorld && mouseOffering.mouseType == MouseType.Magic)
                     {
                         SetMouseAlpha(spriteRenderer, 1f);  // Set alpha to 1 for Magic world
-                        Debug.Log("Magic mouse found: " + mouseObj.name);  // Debug log to confirm
+                  
                     }
                     else if (isPlantWorld && mouseOffering.mouseType == MouseType.Plant)
                     {
                         SetMouseAlpha(spriteRenderer, 1f);  // Set alpha to 1 for Plant world
-                        Debug.Log("Plant mouse found: " + mouseObj.name);  // Debug log to confirm
+                
                     }
                 }
             }

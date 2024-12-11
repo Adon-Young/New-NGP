@@ -9,6 +9,8 @@ public class BeginGame : NetworkBehaviour
     private int numberOfCharactersSelected = 0;  // Local score for Mouse Offerings
     LevelTimer gamesLevelTimerReference;
     public GameObject charSelectionScreen;
+    public CatHealth cateHealthScript;
+    private bool hasTeleported = false;
 
     // Start is called before the first frame update
     private void Awake()
@@ -61,7 +63,6 @@ public class BeginGame : NetworkBehaviour
         return numberOfCharactersSelected >= 4; // Prevent extra selections after limit
     }
 
-
     private void OnAllPlayersSelected()
     {
         // Check if the game is already over to prevent unintended restarts
@@ -70,9 +71,8 @@ public class BeginGame : NetworkBehaviour
             return;
         }
 
-        if (characterSelected.Value == 4 && !EndOfGame.gameEnded.Value)  // Make sure game hasn't ended
+        if (characterSelected.Value == 4 && !EndOfGame.gameEnded.Value) // Make sure game hasn't ended
         {
-
             // Transition UI
             charSelectionScreen.SetActive(false);
             NewPlayerController.UnfreezePlayer();
@@ -82,9 +82,22 @@ public class BeginGame : NetworkBehaviour
             {
                 gamesLevelTimerReference.StartTimerServerRpc(); // Trigger the countdown and timer start
             }
-          
+
+            // Teleport all players to their spawn points only once
+            if (!hasTeleported)
+            {
+                hasTeleported = true; // Set the flag to true to prevent future teleports
+                TeleportAllPlayersToSpawnPoints();
+            }
         }
-
-
     }
+
+    private void TeleportAllPlayersToSpawnPoints()
+    {
+        foreach (var player in FindObjectsOfType<CatHealth>())
+        {
+            player.TeleportToSafeZone();
+        }
+    }
+
 }
