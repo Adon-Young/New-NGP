@@ -12,11 +12,8 @@ using static MouseOffering;
 
 public class NewPlayerController : NetworkBehaviour
 {
-    /*these bools will determing whihc local world game objects are activated for each player. this happens locally because we dont need
-     * or want to send data over the network that doesnt need to be sent. for exampleif i had 1 sprite and i coded it to change colour
-     * to match each players cat and sent it over the network that would be unnecessary as only the players locally will need to see those changes, therefore they dont need to communicate
-     with the other players online. so better keeping it all local except the player movement and actions along with platforms and objects that are shared between worlds...*/
-
+    
+ 
     public bool isWaterWorld = false;
     public bool isFireWorld = false;
     public bool isPlantWorld = false;
@@ -88,7 +85,7 @@ public class NewPlayerController : NetworkBehaviour
 
     public void Awake()
     {
-
+       
         isFrozen = true;
         playersRB = GetComponent<Rigidbody2D>();
         playerAnimatorController = GetComponent<Animator>();
@@ -109,19 +106,23 @@ public class NewPlayerController : NetworkBehaviour
     private void Start()
     {
 
-       
-
         isInWater = false;
         GameObject waterObject = GameObject.FindWithTag("Water");  // Or you could use GameObject.Find("Water");
         if (waterObject != null)
         {
             waterScript = waterObject.GetComponent<Water>();  // Get the Water script component
         }
-    
+
+      
+
+
     }
 
-    private void Update()
-    {
+
+
+
+private void Update()
+    { 
         if (!IsOwner) return;
 
         playerTagCanvas.transform.rotation = Quaternion.identity;

@@ -11,18 +11,19 @@ using Unity.Collections;
 
 public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehaviour
 {
-    //script references...
     public Water waterIsRisingScript;
     public PlayerCollision playerCollisionScript;
-    public NewPlayerController newPlayerControllerScript;
+  
     public LevelTimer levelTimerScript;
     public EndOfGame endOfGameScript;
     public BeginGame beginGameScript;
+
 
     private Dictionary<ulong, GameObject> playerObjects = new Dictionary<ulong, GameObject>();
     [SerializeField] private Button hostButton;
     [SerializeField] private Button serverButton;
     [SerializeField] private Button clientButton;
+    [SerializeField] private Button quitButton;
 
     // Variable to track the maximum number of players
     public int maximumPlayerCount = 4; // capping it at 4 players per server
@@ -31,66 +32,6 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
     // New TMP_Text field to display current player count
     [SerializeField] private TMP_Text playerCountText; // Reference to the TextMeshPro UI text element
 
-    //--------------------------------------------------------------------------------------------------------------------------
-    //--------------------------------------------------------------------------------------------------------------------------
-    public void ResetGameVariables()
-    {
-        // Reset WaterIsRising
-        waterIsRisingScript.isRising.Value = false;
-
-        // Reset PlayerCollision network variables
-        playerCollisionScript.networkMouseOfferings.Value = 0;
-        playerCollisionScript.networkStatueScore.Value = 0;
-        PlayerCollision.totalMouseOfferings.Value = 0;
-        PlayerCollision.totalStatueScore.Value = 0;
-        playerCollisionScript.mouseOnCatVisible.Value = false;
-
-        // Reset NewPlayerController's network variable
-        newPlayerControllerScript.onlinePlayerData.Value = new MyTransferrableData
-        {
-            playerTag = new FixedString128Bytes(""),
-            rValue = 0f,
-            gValue = 0f,
-            bValue = 0f,
-            aValue = 0f
-        };
-
-        // Reset sprite flipped status
-        newPlayerControllerScript.isSpriteFlipped.Value = false;
-
-        // Reset MultiplayerManager's currentPlayerCount
-        currentPlayerCount.Value = 0;
-
-        // Reset LevelTimer's countdown value
-        levelTimerScript.countdownValue.Value = 3;
-
-        // Reset MyScoreMechanics in MultiplayerManager
-        levelTimerScript.onlineScoreData.Value = new MyScoreMechanics
-        {
-            levelScore_score = 0,
-            endOfLevel_levelComplete = false,
-            endOfCounttDownTimer_timerRunning = false
-        };
-
-        // Reset EndOfGame's gameEnded
-        EndOfGame.gameEnded.Value = false;
-
-        // Reset BeginGame's characterSelected
-        beginGameScript.characterSelected.Value = 0;
-
-    }
-
-    
-    public void ReloadSceneAndResetVariables()
-    {
-        // Reload the scene first
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-
-        // After scene reload, reset all variables
-        ResetGameVariables();
-    }
-    //--------------------------------------------------------------------------------------------------------------------------
-    //--------------------------------------------------------------------------------------------------------------------------
 
     private void Awake()
     {
@@ -102,6 +43,7 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
         {
 
             NetworkManager.Singleton.StartHost();
+            EnableQuitButtonForHost();//so only the host can end the game!
         });
 
         serverButton.onClick.AddListener(() =>
@@ -116,6 +58,16 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
             NetworkManager.Singleton.StartClient();
         });
     }
+
+    private void EnableQuitButtonForHost()
+    {
+        if (NetworkManager.Singleton.IsHost)
+        {
+            quitButton.gameObject.SetActive(true); // Enable the Quit button
+
+        }
+    }
+
 
     private void OnDestroy()
     {
@@ -162,9 +114,9 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
                 currentPlayerCount.Value = GetCurrentPlayerCount(); // Set the network variable to the current count
             }
 
-           
+
         }
-       
+
 
     }
 
@@ -221,6 +173,65 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
                 playerObjects.Remove(clientId); // Remove the reference from the dictionary
             }
         }
-       
+
+    }
+
+
+
+
+
+
+
+
+    //resetting the game at the end of the level...
+
+    public void DisconnectAndReload()
+    {
+        // Disconnect all players including the host
+        NetworkManager.Singleton.Shutdown();
+
+        // Notify all clients to reload the scene
+        if (NetworkManager.Singleton.IsHost)
+        {
+            // Host reloads the scene locally
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            ResetNetworkVariables();
+
+            // Notify all clients to reload their scene as well
+            ReloadSceneForClientsClientRPC();
+        }
+    }
+
+    // This will notify all clients to reload the scene
+    [ClientRpc]
+    private void ReloadSceneForClientsClientRPC()
+    {
+        // Reload the scene for all clients
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        ResetNetworkVariables();
+    }
+
+    private void ResetNetworkVariables()
+    {
+        currentPlayerCount.Value = 0;
+      
+        waterIsRisingScript.isRising.Value = false;
+        EndOfGame.gameEnded.Value = false;
+        beginGameScript.characterSelected.Value = 0;
+        levelTimerScript.countdownValue.Value = 3;
+        levelTimerScript.onlineScoreData.Value = new MyScoreMechanics
+        {
+            levelScore_score = 0,
+            endOfLevel_levelComplete = false,
+            endOfCounttDownTimer_timerRunning = false
+        };
+
     }
 }
+
+
+
+
+
+
+

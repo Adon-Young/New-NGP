@@ -9,8 +9,9 @@ public class BeginGame : NetworkBehaviour
     private int numberOfCharactersSelected = 0;  // Local score for Mouse Offerings
     LevelTimer gamesLevelTimerReference;
     public GameObject charSelectionScreen;
-    public CatHealth cateHealthScript;
     private bool hasTeleported = false;
+    private bool countdownPlayed = false;
+    public AudioSource beginningCountDown;
 
     // Start is called before the first frame update
     private void Awake()
@@ -71,7 +72,7 @@ public class BeginGame : NetworkBehaviour
             return;
         }
 
-        if (characterSelected.Value == 4 && !EndOfGame.gameEnded.Value) // Make sure game hasn't ended
+        if (characterSelected.Value == 4 && !EndOfGame.gameEnded.Value) // Ensure game hasn't ended
         {
             // Transition UI
             charSelectionScreen.SetActive(false);
@@ -81,6 +82,12 @@ public class BeginGame : NetworkBehaviour
             if (gamesLevelTimerReference != null)
             {
                 gamesLevelTimerReference.StartTimerServerRpc(); // Trigger the countdown and timer start
+
+                if (!countdownPlayed) // Check if the countdown has already been played
+                {
+                    countdownPlayed = true; // Set the flag to true
+                    PlayCountDownClientRpc(); // Play the countdown audio for all clients
+                }
             }
 
             // Teleport all players to their spawn points only once
@@ -99,5 +106,15 @@ public class BeginGame : NetworkBehaviour
             player.TeleportToSafeZone();
         }
     }
+
+    [ClientRpc]
+    public void PlayCountDownClientRpc()
+    {
+        if (beginningCountDown != null && !beginningCountDown.isPlaying)
+        {
+            beginningCountDown.Play();
+        }
+    }
+
 
 }
