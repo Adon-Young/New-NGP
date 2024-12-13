@@ -1219,7 +1219,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1883567642}
         m_TargetAssemblyTypeName: MultiPlayerManager, Assembly-CSharp
-        m_MethodName: EndGame
+        m_MethodName: LeaveGameProperly
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2920,7 +2920,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1883567642}
         m_TargetAssemblyTypeName: MultiPlayerManager, Assembly-CSharp
-        m_MethodName: ResetGame
+        m_MethodName: EndGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4586,6 +4586,85 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 736825769}
   m_CullTransparentMesh: 1
+--- !u!1 &738628214
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 738628217}
+  - component: {fileID: 738628216}
+  - component: {fileID: 738628215}
+  m_Layer: 5
+  m_Name: Lose
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &738628215
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 738628214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 80
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 1
+    m_MaxSize: 200
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: Level Incomplete
+--- !u!222 &738628216
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 738628214}
+  m_CullTransparentMesh: 1
+--- !u!224 &738628217
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 738628214}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1813221563}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -91}
+  m_SizeDelta: {x: 1920, y: 132.2965}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &745970409
 GameObject:
   m_ObjectHideFlags: 0
@@ -4961,6 +5040,8 @@ MonoBehaviour:
   levelTimer: {fileID: 580663073}
   LearerboardScreen: {fileID: 1813221562}
   playerHUD: {fileID: 1511267514}
+  winText: {fileID: 816716530}
+  loseText: {fileID: 738628214}
   endLevelAudio: {fileID: 271978496}
 --- !u!114 &760840611
 MonoBehaviour:
@@ -5195,12 +5276,12 @@ GameObject:
   - component: {fileID: 816716533}
   - component: {fileID: 816716532}
   m_Layer: 5
-  m_Name: GameTitle
+  m_Name: Win
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &816716531
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5233,7 +5314,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.060334444, g: 1, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -13098,6 +13179,7 @@ RectTransform:
   m_Children:
   - {fileID: 1876953379}
   - {fileID: 816716531}
+  - {fileID: 738628217}
   - {fileID: 880480892}
   - {fileID: 550794385}
   - {fileID: 64875506}
@@ -13478,8 +13560,8 @@ MonoBehaviour:
   waterIsRisingScript: {fileID: 0}
   playerCollisionScript: {fileID: 0}
   levelTimerScript: {fileID: 0}
-  endOfGameScript: {fileID: 0}
-  beginGameScript: {fileID: 0}
+  endOfGameScript: {fileID: 760840610}
+  beginGameScript: {fileID: 760840608}
   hostButton: {fileID: 1427857549}
   serverButton: {fileID: 1108541593}
   clientButton: {fileID: 872399649}

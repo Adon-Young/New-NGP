@@ -143,7 +143,7 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
     }
 
     // Public function to allow players to leave the server (disconnection logic)
-   
+
 
     // Callback for when a player disconnects
     private void OnClientDisconnected(ulong clientId)
@@ -170,145 +170,89 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
 
 
 
-    public void ResetGame()
+
+
+
+
+
+
+    public void LeaveGame()
     {
-        if (NetworkManager.Singleton.IsHost)
+        // Reset all character selection UIs
+        var colourSelections = FindObjectsOfType<NewColourSelection>();
+        foreach (var colourSelection in colourSelections)
         {
-            Debug.Log("Host is shutting down the network and notifying clients to reload.");
-
-            // Notify all clients to reload their scenes
-            NotifyClientsToReloadSceneServerRpc();
-
-            // Shutdown the NetworkManager
-            NetworkManager.Singleton.Shutdown();
-
-            // Reload the scene for the host
-            ReloadSceneLocally();
+            colourSelection.ResetCharacterSelection();
         }
-        else
+
+        // Proceed with leaving game logic
+        if (NetworkManager.Singleton != null)
         {
-            Debug.LogWarning("Only the host can reset the game.");
+            NetworkManager.Singleton.Shutdown();
+            Destroy(NetworkManager.Singleton.gameObject);
+        }
+
+        if (IsHost)
+        {
+            ReloadSceneClientRpc("TestScene");
+            NetworkManager.Singleton.Shutdown();
+        }
+        else if (IsClient)
+        {
+            NetworkManager.Singleton.Shutdown();
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void NotifyClientsToReloadSceneServerRpc()
+    public void EndGame()
     {
-        Debug.Log("Server RPC called to notify all clients.");
-        NotifyClientsToReloadSceneClientRpc();
+        // Notify all clients (host included) to reload the main menu scene
+        if (IsHost)
+        {
+            ReloadSceneClientRpc("TestScene");
+        }
+        ReloadSceneClientRpc("TestScene");
+        // Shut down the server or disconnect clients
+        LeaveGame();
     }
 
     [ClientRpc]
-    private void NotifyClientsToReloadSceneClientRpc()
+    private void ReloadSceneClientRpc(string sceneName)
     {
-        Debug.Log("Client received notification to reload their scene.");
-        ReloadSceneLocally();
+        // Ensure all clients (and host) reload the scene
+        SceneManager.LoadScene(sceneName);
+        ResetNetworkVariables();
     }
 
-    private void ReloadSceneLocally()
+
+
+
+
+    private void ResetNetworkVariables()
     {
-        Debug.Log($"Reloading scene: {SceneManager.GetActiveScene().name}");
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        // Reset other network variables
+        currentPlayerCount.Value = 0;
+        EndOfGame.gameEnded.Value = false;
+        beginGameScript.characterSelected.Value = 0;
+        levelTimerScript.countdownValue.Value = 3;
+        levelTimerScript.onlineScoreData.Value = new MyScoreMechanics
+        {
+            levelScore_score = 0,
+            endOfLevel_levelComplete = false,
+            endOfCounttDownTimer_timerRunning = false
+        };
+
+
+
+        // Reset scores
+        var scoreController = FindObjectOfType<ScoreController>();
+        if (scoreController != null)
+        {
+            scoreController.ResetScores();
+        }
     }
+
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //public void LeaveGame()
-    //{
-    //    // Reset all character selection UIs
-    //    var colourSelections = FindObjectsOfType<NewColourSelection>();
-    //    foreach (var colourSelection in colourSelections)
-    //    {
-    //        colourSelection.ResetCharacterSelection();
-    //    }
-
-    //        // Proceed with leaving game logic
-    //        if (NetworkManager.Singleton != null)
-    //    {
-    //        NetworkManager.Singleton.Shutdown();
-    //        Destroy(NetworkManager.Singleton.gameObject);
-    //    }
-
-    //    if (IsHost)
-    //    {
-    //        ReloadSceneClientRpc("TestScene");
-    //        NetworkManager.Singleton.Shutdown();
-    //    }
-    //    else if (IsClient)
-    //    {
-    //        NetworkManager.Singleton.Shutdown();
-    //    }
-    //}
-
-    //public void EndGame()
-    //{
-    //    // Notify all clients (host included) to reload the main menu scene
-    //    if (IsHost)
-    //    {
-    //        ReloadSceneClientRpc("TestScene");
-    //    }
-    //    ReloadSceneClientRpc("TestScene");
-    //    // Shut down the server or disconnect clients
-    //    LeaveGame();
-    //}
-
-    //[ClientRpc]
-    //private void ReloadSceneClientRpc(string sceneName)
-    //{
-    //    // Ensure all clients (and host) reload the scene
-    //    SceneManager.LoadScene(sceneName);
-    //    ResetNetworkVariables();
-    //}
-
-
-
-
-
-    //private void ResetNetworkVariables()
-    //{
-    //    // Reset other network variables
-    //    currentPlayerCount.Value = 0;
-    //    EndOfGame.gameEnded.Value = false;
-    //    beginGameScript.characterSelected.Value = 0;
-    //    levelTimerScript.countdownValue.Value = 3;
-    //    levelTimerScript.onlineScoreData.Value = new MyScoreMechanics
-    //    {
-    //        levelScore_score = 0,
-    //        endOfLevel_levelComplete = false,
-    //        endOfCounttDownTimer_timerRunning = false
-    //    };
-
-   
-
-    //    // Reset scores
-    //    var scoreController = FindObjectOfType<ScoreController>();
-    //    if (scoreController != null)
-    //    {
-    //        scoreController.ResetScores();
-    //    }
-    //}
-
-
-
 
 
 

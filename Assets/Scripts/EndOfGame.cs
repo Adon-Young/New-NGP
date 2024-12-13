@@ -7,10 +7,13 @@ public class EndOfGame : NetworkBehaviour
     public LevelTimer levelTimer; // Reference to the LevelTimer script
     public GameObject LearerboardScreen;
     public GameObject playerHUD;
+    public GameObject winText; // UI element for the win message
+    public GameObject loseText; // UI element for the lose message
     public AudioSource endLevelAudio; // Audio source for the end level sound
 
-    // Change to a NetworkVariable to sync across all clients
+    // Network variables to sync across clients
     public static NetworkVariable<bool> gameEnded = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public static NetworkVariable<int> gameResult = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     private void Update()
     {
@@ -19,20 +22,45 @@ public class EndOfGame : NetworkBehaviour
             return;
         }
 
-        // Check for game end conditions
+        // Check for game end conditions (win)
         if (!gameEnded.Value && ScoreController.totalMouseOfferings.Value == 4 && ScoreController.totalStatueScore.Value == 4)
         {
             if (IsServer) // Only the server can stop the timer and set the game end
             {
-                levelTimer.StopTimerServerRpc(); // Stop the timer on the server
-
-                // Update gameEnded on the server and trigger the update for clients
+                levelTimer.StopTimerServerRpc();
                 gameEnded.Value = true; // Sync game end across all clients
-
-                // Start the end sequence coroutine
+                gameResult.Value = 1; // 1 = win
                 StartCoroutine(EndOfLevel());
             }
         }
+
+        // Check for loss condition (any cat health at 0)
+        if (!gameEnded.Value && IsServer && AnyCatHealthZero()) // Only the server checks this
+        {
+            levelTimer.StopTimerServerRpc();
+            gameEnded.Value = true;
+            gameResult.Value = -1; // -1 = lose
+
+            // Directly display the leaderboard for loss
+            DisplayLeaderboardClientRpc();
+        }
+    }
+
+    // Function to dynamically check all CatHealth scripts for 0 health
+    private bool AnyCatHealthZero()
+    {
+        // Find all active CatHealth components in the scene
+        CatHealth[] allCats = FindObjectsOfType<CatHealth>();
+
+        // Loop through each CatHealth instance to check health
+        foreach (CatHealth cat in allCats)
+        {
+            if (cat.currentCatHealth.Value <= 0) // If any cat has 0 health
+            {
+                return true; // Trigger loss condition
+            }
+        }
+        return false; // No cats with 0 health
     }
 
     private IEnumerator EndOfLevel()
@@ -62,11 +90,22 @@ public class EndOfGame : NetworkBehaviour
     public void DisplayLeaderboardClientRpc()
     {
         // This method will be called on all clients to display the leaderboard
-        // Freeze player actions on all clients
         NewPlayerController.FreezePlayer();
 
-        // Hide the HUD and show the leaderboard after freezing
-        playerHUD.SetActive(false); // Hide the HUD
-        LearerboardScreen.SetActive(true); // Show the leaderboard screen
+        // Hide the HUD and show the leaderboard
+        playerHUD.SetActive(false);
+        LearerboardScreen.SetActive(true);
+
+        // Update the UI based on the game result
+        if (gameResult.Value == 1)
+        {
+            winText.SetActive(true);
+            loseText.SetActive(false);
+        }
+        else if (gameResult.Value == -1)
+        {
+            winText.SetActive(false);
+            loseText.SetActive(true);
+        }
     }
 }
