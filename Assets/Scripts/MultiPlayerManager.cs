@@ -221,8 +221,7 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
             endOfCounttDownTimer_timerRunning = false
         };
 
-        // Add any other reset logic needed
-        Debug.Log("Resetting network variables...");
+  
     }
 }
 

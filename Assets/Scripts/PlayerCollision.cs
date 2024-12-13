@@ -2,6 +2,7 @@ using UnityEngine;
 using Unity.Netcode;
 using TMPro;
 
+
 public class PlayerCollision : NetworkBehaviour
 {
     public enum PlayerType { Fire, Water, Magic, Plant }
@@ -9,23 +10,22 @@ public class PlayerCollision : NetworkBehaviour
 
 
     // Network variables to track individual player scores and total scores
-    public NetworkVariable<int> networkMouseOfferings = new NetworkVariable<int>(0);  // Player's mouse score
-    public NetworkVariable<int> networkStatueScore = new NetworkVariable<int>(0);  // Player's statue score
-    public static NetworkVariable<int> totalMouseOfferings = new NetworkVariable<int>(0);  // Total mouse score for all players
-    public static NetworkVariable<int> totalStatueScore = new NetworkVariable<int>(0);  // Total statue score for all players
+    //public NetworkVariable<int> networkMouseOfferings = new NetworkVariable<int>(0);  // Player's mouse score
+    //public NetworkVariable<int> networkStatueScore = new NetworkVariable<int>(0);  // Player's statue score
+    //public static NetworkVariable<int> totalMouseOfferings = new NetworkVariable<int>(0);  // Total mouse score for all players
+    //public static NetworkVariable<int> totalStatueScore = new NetworkVariable<int>(0);  // Total statue score for all players
     LevelTimer gamesLevelTimerReference;
     NewPlayerController playerController;
     private TMP_Text mouseOfferingsText;  // Reference to the Text UI for displaying the mouse offerings score
     private TMP_Text statueScoreText;  // Reference to the Text UI for displaying the statue score
-
     private GameObject MouseOnCatObject;  // The GameObject that is the mouse sprite (child of the player)
-
+    private ScoreController scoreController;
     // Network variable to sync MouseOnCat state
     public NetworkVariable<bool> mouseOnCatVisible = new NetworkVariable<bool>(false);
 
     public void Start()
     {
-       
+        scoreController = FindObjectOfType<ScoreController>();
         playerController = GetComponent<NewPlayerController>();
 
 
@@ -62,13 +62,13 @@ public class PlayerCollision : NetworkBehaviour
         if (mouseOfferingsText != null)
         {
             // Display the total mouse offerings score for all players
-            mouseOfferingsText.text = "Mouse Offerings: " + totalMouseOfferings.Value.ToString();
+            mouseOfferingsText.text = "Mouse Offerings: " + ScoreController.totalMouseOfferings.Value.ToString();
         }
 
         if (statueScoreText != null)
         {
             // Display the total statue score for all players
-            statueScoreText.text = "Statue Score: " + totalStatueScore.Value.ToString();
+            statueScoreText.text = "Statue Score: " + ScoreController.totalStatueScore.Value.ToString();
         }
     }
 
@@ -187,20 +187,20 @@ public class PlayerCollision : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void UpdateMouseOfferingsScoreServerRpc(int addValue, ulong clientId)
     {
-        networkMouseOfferings.Value += addValue;  // Add value to the player's score
-        totalMouseOfferings.Value += addValue;  // Update the total mouse offerings score
-    
-        NotifyMouseOfferingsScoreClientRpc(networkMouseOfferings.Value);  // Notify all clients to update their display
+        scoreController.networkMouseOfferings.Value += addValue;  // Add value to the player's score
+        ScoreController.totalMouseOfferings.Value += addValue;  // Update the total mouse offerings score
+
+        NotifyMouseOfferingsScoreClientRpc(scoreController.networkMouseOfferings.Value);  // Notify all clients to update their display
     }
 
     // ServerRpc to update the statue score on the server
     [ServerRpc(RequireOwnership = false)]
     public void UpdateStatueScoreServerRpc(int addValue, ulong clientId)
     {
-        networkStatueScore.Value += addValue;  // Add value to the statue score
-        totalStatueScore.Value += addValue;  // Update the total statue score
-    
-        NotifyStatueScoreClientRpc(networkStatueScore.Value);  // Notify all clients to update their display
+        scoreController.networkStatueScore.Value += addValue;  // Add value to the statue score
+        ScoreController.totalStatueScore.Value += addValue;  // Update the total statue score
+
+        NotifyStatueScoreClientRpc(scoreController.networkStatueScore.Value);  // Notify all clients to update their display
     }
 
     // ServerRpc to show/hide the mouse sprite (statue functionality can be added here)
@@ -249,16 +249,13 @@ public class PlayerCollision : NetworkBehaviour
     private void CheckAndStopTimer()
     {
         // Check if both network scores have reached 4
-        if (networkStatueScore.Value == 4 && networkMouseOfferings.Value == 4)
+        if (scoreController.networkStatueScore.Value == 4 && scoreController.networkMouseOfferings.Value == 4)
         {
-          
-
             // Stop the game countdown timer
             if (gamesLevelTimerReference != null)
             {
                 gamesLevelTimerReference.StopTimerServerRpc(); // Call to stop the timer on the server
             }
-         
         }
     }
 

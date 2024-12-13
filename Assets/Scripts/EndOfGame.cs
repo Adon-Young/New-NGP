@@ -20,7 +20,7 @@ public class EndOfGame : NetworkBehaviour
         }
 
         // Check for game end conditions
-        if (!gameEnded.Value && PlayerCollision.totalMouseOfferings.Value == 4 && PlayerCollision.totalStatueScore.Value == 4)
+        if (!gameEnded.Value && ScoreController.totalMouseOfferings.Value == 4 && ScoreController.totalStatueScore.Value == 4)
         {
             if (IsServer) // Only the server can stop the timer and set the game end
             {
