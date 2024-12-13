@@ -13,7 +13,7 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
 {
     public Water waterIsRisingScript;
     public PlayerCollision playerCollisionScript;
-  
+
     public LevelTimer levelTimerScript;
     public EndOfGame endOfGameScript;
     public BeginGame beginGameScript;
@@ -143,20 +143,7 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
     }
 
     // Public function to allow players to leave the server (disconnection logic)
-    public void LeaveGame()
-    {
-        // Check if the player is the host
-        if (IsHost)
-        {
-            // If the host is leaving, simply shut down the server
-            NetworkManager.Singleton.Shutdown(); // Shut down the server
-        }
-        else if (IsClient)
-        {
-            // If it's a client, simply disconnect
-            NetworkManager.Singleton.Shutdown(); // Disconnect the client
-        }
-    }
+   
 
     // Callback for when a player disconnects
     private void OnClientDisconnected(ulong clientId)
@@ -176,46 +163,54 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
 
     }
 
-
-
-
-
-
-
-
-    //resetting the game at the end of the level...
-
-    public void DisconnectAndReload()
+    public void LeaveGame()
     {
-        // Disconnect all players including the host
-        NetworkManager.Singleton.Shutdown();
-
-        // Notify all clients to reload the scene
-        if (NetworkManager.Singleton.IsHost)
+        if (IsHost)
         {
-            // Host reloads the scene locally
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            ResetNetworkVariables();
+            // Notify all clients to reload the scene
+            ReloadSceneClientRpc("TestScene");
 
-            // Notify all clients to reload their scene as well
-            ReloadSceneForClientsClientRPC();
+            // Shut down the server
+            NetworkManager.Singleton.Shutdown();
+        }
+        else if (IsClient)
+        {
+            // Disconnect the client
+            NetworkManager.Singleton.Shutdown();
         }
     }
 
-    // This will notify all clients to reload the scene
-    [ClientRpc]
-    private void ReloadSceneForClientsClientRPC()
+    public void EndGame()
     {
-        // Reload the scene for all clients
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        // Notify all clients (host included) to reload the main menu scene
+        if (IsHost)
+        {
+            ReloadSceneClientRpc("TestScene");
+        }
+
+        // Shut down the server or disconnect clients
+        LeaveGame();
+    }
+
+    [ClientRpc]
+    private void ReloadSceneClientRpc(string sceneName)
+    {
+        // Ensure all clients (and host) reload the scene
+        SceneManager.LoadScene(sceneName);
         ResetNetworkVariables();
     }
 
+
+
+
+
+
     private void ResetNetworkVariables()
     {
+        // Reset your network variables here
         currentPlayerCount.Value = 0;
+
       
-        waterIsRisingScript.isRising.Value = false;
         EndOfGame.gameEnded.Value = false;
         beginGameScript.characterSelected.Value = 0;
         levelTimerScript.countdownValue.Value = 3;
@@ -226,6 +221,8 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
             endOfCounttDownTimer_timerRunning = false
         };
 
+        // Add any other reset logic needed
+        Debug.Log("Resetting network variables...");
     }
 }
 

@@ -119,6 +119,7 @@ public class PlayerCollision : NetworkBehaviour
 
                     // Destroy the mouse object after scoring on the server
                     DestroyMouseServerRpc(other.gameObject.GetComponent<NetworkObject>());
+                    PlayeMouseCaughtAudioServerRpc();//audio for catching mice
 
                     // Optionally, set the mouse sprite visible
                     SetMouseOnCatVisibleServerRpc(true);
@@ -135,6 +136,7 @@ public class PlayerCollision : NetworkBehaviour
             if (NetworkManager.Singleton.LocalClientId == OwnerClientId)
             {
                 UpdateStatueScoreServerRpc(1, OwnerClientId);
+              
             }
         }
 
@@ -162,6 +164,12 @@ public class PlayerCollision : NetworkBehaviour
         {
             playerController.ExitWater();
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void PlayeMouseCaughtAudioServerRpc()//sending info to the server
+    {
+        TellClientsToPlayTheMouseAudioClientRpc();//distributing the audio to all clients at once telling them to play the audio in synch
     }
 
 
@@ -204,6 +212,17 @@ public class PlayerCollision : NetworkBehaviour
     }
 
 
+    [ClientRpc]
+    public void TellClientsToPlayTheMouseAudioClientRpc()
+    {
+        AudioSource mouseAudio = GameObject.Find("MouseCaughtAudio").GetComponent<AudioSource>();
+        if (mouseAudio != null)
+        {
+            mouseAudio.Play();
+        }
+    }//can use the same method for damage when a player gets hurt?--need to get more audio
+
+
     // ClientRpc to notify all clients about the updated mouse offerings score
     [ClientRpc]
     private void NotifyMouseOfferingsScoreClientRpc(int newScore)
@@ -232,7 +251,7 @@ public class PlayerCollision : NetworkBehaviour
         // Check if both network scores have reached 4
         if (networkStatueScore.Value == 4 && networkMouseOfferings.Value == 4)
         {
-           
+          
 
             // Stop the game countdown timer
             if (gamesLevelTimerReference != null)
