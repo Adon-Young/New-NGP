@@ -163,13 +163,14 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
 
     }
 
+    public void LeaveLobby()
+    {
+        // Pass the local clientId to OnClientDisconnected
+        OnClientDisconnected(NetworkManager.Singleton.LocalClientId);
 
-
-
-
-
-
-
+        // Optionally, call NetworkManager shutdown to disconnect the client
+        NetworkManager.Singleton.Shutdown();
+    }
 
 
 

@@ -1219,7 +1219,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1883567642}
         m_TargetAssemblyTypeName: MultiPlayerManager, Assembly-CSharp
-        m_MethodName: LeaveGameProperly
+        m_MethodName: LeaveLobby
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
