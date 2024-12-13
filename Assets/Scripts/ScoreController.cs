@@ -26,4 +26,17 @@ public class ScoreController : NetworkBehaviour
         networkMouseOfferings.Value = mouseOfferings; // Example, you can track local scores as needed
         networkStatueScore.Value = statueScore;
     }
+
+
+    public void ResetScores()
+    {
+        if (IsServer)  // Ensure only the server can reset the values
+        {
+            networkMouseOfferings.Value = 0;
+            networkStatueScore.Value = 0;
+            totalMouseOfferings.Value = 0;
+            totalStatueScore.Value = 0;
+        }
+    }
+
 }

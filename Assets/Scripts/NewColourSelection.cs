@@ -195,5 +195,27 @@ public class NewColourSelection : NetworkBehaviour
         GetComponent<Button>().interactable = true;
     }
 
+    //test reset to see if it fixes my player issues...
+    public void ResetCharacterSelection()
+    {
+        // Reset the button interactability and blocker images
+        foreach (Button button in characterButtons)
+        {
+            button.interactable = true; // Re-enable all buttons
+        }
 
+        foreach (Image blockerImage in blockerImages)
+        {
+            blockerImage.gameObject.SetActive(false); // Hide blocker images
+        }
+
+        // Reset the "Ready!" text
+        if (readyText != null)
+        {
+            readyText.text = "";
+        }
+
+        // Reset the ready count
+        playersReadyCount = 0;
+    }
 }

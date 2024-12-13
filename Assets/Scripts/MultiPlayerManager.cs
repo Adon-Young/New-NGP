@@ -163,67 +163,150 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
 
     }
 
-    public void LeaveGame()
-    {
-        if (IsHost)
-        {
-            // Notify all clients to reload the scene
-            ReloadSceneClientRpc("TestScene");
 
-            // Shut down the server
-            NetworkManager.Singleton.Shutdown();
-        }
-        else if (IsClient)
+
+
+
+
+
+
+    public void ResetGame()
+    {
+        if (NetworkManager.Singleton.IsHost)
         {
-            // Disconnect the client
+            Debug.Log("Host is shutting down the network and notifying clients to reload.");
+
+            // Notify all clients to reload their scenes
+            NotifyClientsToReloadSceneServerRpc();
+
+            // Shutdown the NetworkManager
             NetworkManager.Singleton.Shutdown();
+
+            // Reload the scene for the host
+            ReloadSceneLocally();
+        }
+        else
+        {
+            Debug.LogWarning("Only the host can reset the game.");
         }
     }
 
-    public void EndGame()
+    [ServerRpc(RequireOwnership = false)]
+    private void NotifyClientsToReloadSceneServerRpc()
     {
-        // Notify all clients (host included) to reload the main menu scene
-        if (IsHost)
-        {
-            ReloadSceneClientRpc("TestScene");
-        }
-
-        // Shut down the server or disconnect clients
-        LeaveGame();
+        Debug.Log("Server RPC called to notify all clients.");
+        NotifyClientsToReloadSceneClientRpc();
     }
 
     [ClientRpc]
-    private void ReloadSceneClientRpc(string sceneName)
+    private void NotifyClientsToReloadSceneClientRpc()
     {
-        // Ensure all clients (and host) reload the scene
-        SceneManager.LoadScene(sceneName);
-        ResetNetworkVariables();
+        Debug.Log("Client received notification to reload their scene.");
+        ReloadSceneLocally();
     }
 
-
-
-
-
-
-    private void ResetNetworkVariables()
+    private void ReloadSceneLocally()
     {
-        // Reset your network variables here
-        currentPlayerCount.Value = 0;
-
-      
-        EndOfGame.gameEnded.Value = false;
-        beginGameScript.characterSelected.Value = 0;
-        levelTimerScript.countdownValue.Value = 3;
-        levelTimerScript.onlineScoreData.Value = new MyScoreMechanics
-        {
-            levelScore_score = 0,
-            endOfLevel_levelComplete = false,
-            endOfCounttDownTimer_timerRunning = false
-        };
-
-  
+        Debug.Log($"Reloading scene: {SceneManager.GetActiveScene().name}");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //public void LeaveGame()
+    //{
+    //    // Reset all character selection UIs
+    //    var colourSelections = FindObjectsOfType<NewColourSelection>();
+    //    foreach (var colourSelection in colourSelections)
+    //    {
+    //        colourSelection.ResetCharacterSelection();
+    //    }
+
+    //        // Proceed with leaving game logic
+    //        if (NetworkManager.Singleton != null)
+    //    {
+    //        NetworkManager.Singleton.Shutdown();
+    //        Destroy(NetworkManager.Singleton.gameObject);
+    //    }
+
+    //    if (IsHost)
+    //    {
+    //        ReloadSceneClientRpc("TestScene");
+    //        NetworkManager.Singleton.Shutdown();
+    //    }
+    //    else if (IsClient)
+    //    {
+    //        NetworkManager.Singleton.Shutdown();
+    //    }
+    //}
+
+    //public void EndGame()
+    //{
+    //    // Notify all clients (host included) to reload the main menu scene
+    //    if (IsHost)
+    //    {
+    //        ReloadSceneClientRpc("TestScene");
+    //    }
+    //    ReloadSceneClientRpc("TestScene");
+    //    // Shut down the server or disconnect clients
+    //    LeaveGame();
+    //}
+
+    //[ClientRpc]
+    //private void ReloadSceneClientRpc(string sceneName)
+    //{
+    //    // Ensure all clients (and host) reload the scene
+    //    SceneManager.LoadScene(sceneName);
+    //    ResetNetworkVariables();
+    //}
+
+
+
+
+
+    //private void ResetNetworkVariables()
+    //{
+    //    // Reset other network variables
+    //    currentPlayerCount.Value = 0;
+    //    EndOfGame.gameEnded.Value = false;
+    //    beginGameScript.characterSelected.Value = 0;
+    //    levelTimerScript.countdownValue.Value = 3;
+    //    levelTimerScript.onlineScoreData.Value = new MyScoreMechanics
+    //    {
+    //        levelScore_score = 0,
+    //        endOfLevel_levelComplete = false,
+    //        endOfCounttDownTimer_timerRunning = false
+    //    };
+
+   
+
+    //    // Reset scores
+    //    var scoreController = FindObjectOfType<ScoreController>();
+    //    if (scoreController != null)
+    //    {
+    //        scoreController.ResetScores();
+    //    }
+    //}
+
 
 
 

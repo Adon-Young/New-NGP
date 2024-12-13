@@ -85,7 +85,7 @@ public class NewPlayerController : NetworkBehaviour
 
     public void Awake()
     {
-       
+        gravityToggle = false;
         isFrozen = true;
         playersRB = GetComponent<Rigidbody2D>();
         playerAnimatorController = GetComponent<Animator>();
