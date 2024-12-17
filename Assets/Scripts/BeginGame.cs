@@ -12,6 +12,7 @@ public class BeginGame : NetworkBehaviour
     private bool hasTeleported = false;
     private bool countdownPlayed = false;
     public AudioSource beginningCountDown;
+ 
 
     // Start is called before the first frame update
     private void Awake()
@@ -105,6 +106,7 @@ public class BeginGame : NetworkBehaviour
         {
             player.TeleportToSafeZone();
         }
+
     }
 
     [ClientRpc]

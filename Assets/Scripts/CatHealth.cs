@@ -14,21 +14,22 @@ public class CatHealth : NetworkBehaviour
     private GameObject plantSpawnPoint;
     private GameObject waterSpawnPoint;
     private GameObject magicSpawnPoint;
-    private bool hasTakenDamage = false; // Prevent continuous damage
-    private bool isSearchingForSpawnPoint = true; // Flag to manage the delayed search
+    private bool hasTakenDamage = false;
+    private bool isSearchingForSpawnPoint = true;
 
     private NewPlayerController playerController;
 
     void Start()
     {
-        // Get reference to the player controller
         playerController = GetComponent<NewPlayerController>();
         if (playerController == null)
         {
             Debug.LogError("NewPlayerController script is missing on the GameObject!");
         }
 
-        // Start the delayed search for the SpawnPoints
+        // Subscribe to the OnValueChanged event to update UI when health changes
+        currentCatHealth.OnValueChanged += UpdateHealthOnCanvas;
+
         StartCoroutine(DelayedSpawnPointSearch());
     }
 
@@ -42,14 +43,13 @@ public class CatHealth : NetworkBehaviour
         }
 
         CheckForDamage();
-        UpdateHealthOnCanvas();
     }
 
-    private void UpdateHealthOnCanvas()
+    private void UpdateHealthOnCanvas(int previousHealth, int newHealth)
     {
         if (HealthTextOnCanvas != null)
         {
-            HealthTextOnCanvas.text = currentCatHealth.Value.ToString();
+            HealthTextOnCanvas.text = newHealth.ToString();
         }
     }
 
@@ -63,10 +63,10 @@ public class CatHealth : NetworkBehaviour
             {
                 if (currentCatHealth.Value > minCatHealth)
                 {
-                    hasTakenDamage = true; // Prevent continuous damage
-                    ApplyDamageServerRpc(-1); // Reduce health by 1 via ServerRpc
-                    TeleportToSafeZone(); // Teleport to the safe zone
-                    StartCoroutine(ResetDamageCooldown()); // Cooldown before allowing damage again
+                    hasTakenDamage = true;
+                    ApplyDamageServerRpc(-1);
+                    TeleportToSafeZone();
+                    StartCoroutine(ResetDamageCooldown());
                 }
             }
             else if (playerController.isWaterWorld)
@@ -81,34 +81,13 @@ public class CatHealth : NetworkBehaviour
     {
         currentCatHealth.Value += damageAmount;
         currentCatHealth.Value = Mathf.Clamp(currentCatHealth.Value, minCatHealth, maxCatHealth);
-
         Debug.Log($"Player health updated to: {currentCatHealth.Value}");
-
-        if (currentCatHealth.Value <= minCatHealth)
-        {
-            Debug.Log("Player has died!");
-            // Handle death logic here
-        }
-
-        UpdateHealthClientRpc(currentCatHealth.Value); // Synchronize health across clients
-    }
-
-    [ClientRpc]
-    private void UpdateHealthClientRpc(int updatedHealth)
-    {
-        currentCatHealth.Value = updatedHealth;
-
-        if (HealthTextOnCanvas != null)
-        {
-            HealthTextOnCanvas.text = updatedHealth.ToString();
-        }
     }
 
     public void TeleportToSafeZone()
     {
         GameObject spawnPoint = null;
 
-        // Determine which spawn point to use based on the player's world
         if (playerController.isFireWorld)
         {
             spawnPoint = fireSpawnPoint;
@@ -133,27 +112,22 @@ public class CatHealth : NetworkBehaviour
         }
 
         Vector3 spawnPosition = spawnPoint.transform.position;
-
-        Debug.Log($"Teleporting player to SpawnPoint at position: {spawnPosition}");
-
-        // Set player position to the chosen SpawnPoint
         transform.position = spawnPosition;
         Debug.Log("Player position updated to: " + transform.position);
     }
 
     private IEnumerator ResetDamageCooldown()
     {
-        yield return new WaitForSeconds(1.0f); // 1-second cooldown
-        hasTakenDamage = false; // Allow damage to be taken again
+        yield return new WaitForSeconds(1.0f);
+        hasTakenDamage = false;
         Debug.Log("Damage cooldown reset. Player can take damage again.");
     }
 
     private IEnumerator DelayedSpawnPointSearch()
     {
         Debug.Log("Starting delayed search for SpawnPoints...");
-        yield return new WaitForSeconds(1.5f); // Wait for 1.5 seconds
+        yield return new WaitForSeconds(1.5f);
 
-        // Find all spawn points in the scene
         fireSpawnPoint = GameObject.Find("FireSpawnPoint");
         plantSpawnPoint = GameObject.Find("PlantSpawnPoint");
         waterSpawnPoint = GameObject.Find("WaterSpawnPoint");
@@ -166,12 +140,10 @@ public class CatHealth : NetworkBehaviour
         else
         {
             Debug.Log($"SpawnPoints successfully found: Fire({fireSpawnPoint.transform.position}), Plant({plantSpawnPoint.transform.position}), Water({waterSpawnPoint.transform.position}), Magic({magicSpawnPoint.transform.position})");
-
-            // Teleport players to their respective spawn points after delay
             TeleportToInitialSpawnPoints();
         }
 
-        isSearchingForSpawnPoint = false; // Stop repeated searching
+        isSearchingForSpawnPoint = false;
     }
 
     private void TeleportToInitialSpawnPoints()

@@ -10,6 +10,7 @@ public class EndOfGame : NetworkBehaviour
     public GameObject winText; // UI element for the win message
     public GameObject loseText; // UI element for the lose message
     public AudioSource endLevelAudio; // Audio source for the end level sound
+ 
 
     // Network variables to sync across clients
     public static NetworkVariable<bool> gameEnded = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -41,6 +42,7 @@ public class EndOfGame : NetworkBehaviour
             gameEnded.Value = true;
             gameResult.Value = -1; // -1 = lose
 
+          
             // Directly display the leaderboard for loss
             DisplayLeaderboardClientRpc();
         }
@@ -72,6 +74,7 @@ public class EndOfGame : NetworkBehaviour
         yield return new WaitForSeconds(endLevelAudio.clip.length);
 
         // Show leaderboard/GameOverScreen
+     
         DisplayLeaderboardClientRpc();
     }
 
@@ -95,14 +98,28 @@ public class EndOfGame : NetworkBehaviour
         // Hide the HUD and show the leaderboard
         playerHUD.SetActive(false);
         LearerboardScreen.SetActive(true);
+   
+    }
 
-        // Update the UI based on the game result
-        if (gameResult.Value == 1)
+    // ServerRpc to notify all clients to display the appropriate win/lose text
+    [ServerRpc]
+    public void DisplayResultOnAllClientsServerRpc()
+    {
+        // Call the client method to update the UI for all players
+        DisplayResultOnAllClientsClientRpc(gameResult.Value);
+    }
+
+    // ClientRpc to display the win or lose text on all clients
+    [ClientRpc]
+    public void DisplayResultOnAllClientsClientRpc(int result)
+    {
+        // Update win/lose text based on the game result
+        if (result == 1) // Win
         {
             winText.SetActive(true);
             loseText.SetActive(false);
         }
-        else if (gameResult.Value == -1)
+        else if (result == -1) // Lose
         {
             winText.SetActive(false);
             loseText.SetActive(true);

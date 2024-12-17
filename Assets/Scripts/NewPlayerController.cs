@@ -113,9 +113,6 @@ public class NewPlayerController : NetworkBehaviour
             waterScript = waterObject.GetComponent<Water>();  // Get the Water script component
         }
 
-      
-
-
     }
 
 
@@ -177,6 +174,9 @@ private void Update()
         }
     }
 
+
+
+
     private void SetMouseAlpha(SpriteRenderer spriteRenderer, float alpha)
     {
         // Get the current color of the sprite
@@ -189,7 +189,29 @@ private void Update()
         spriteRenderer.color = color;
     }
 
-
+    public string GetCatType()
+    {
+        if (isWaterWorld)
+        {
+            return "Water Cat";
+        }
+        else if (isFireWorld)
+        {
+            return "Fire Cat";
+        }
+        else if (isPlantWorld)
+        {
+            return "Plant Cat";
+        }
+        else if (isMagicWorld)
+        {
+            return "Magic Cat";
+        }
+        else
+        {
+            return "Unknown Cat"; // In case no flag is set (fallback)
+        }
+    }
     private void UpdateSpriteFlip()
     {
         if (Input.GetKey(KeyCode.A) && !isSpriteFlipped.Value && isFrozen == false)
