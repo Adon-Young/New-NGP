@@ -232,7 +232,7 @@ public class MultiPlayerManager : NetworkBehaviour // Inherit from NetworkBehavi
     {
         // Reset other network variables
         currentPlayerCount.Value = 0;
-        EndOfGame.gameEnded.Value = false;
+        endOfGameScript.gameEnded.Value = false;
         beginGameScript.characterSelected.Value = 0;
         levelTimerScript.countdownValue.Value = 3;
         levelTimerScript.onlineScoreData.Value = new MyScoreMechanics

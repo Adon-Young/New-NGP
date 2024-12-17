@@ -415,7 +415,7 @@ GameObject:
   - component: {fileID: 100566955}
   - component: {fileID: 100566954}
   m_Layer: 5
-  m_Name: Text
+  m_Name: FireMouseText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -460,7 +460,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: MICE
+  m_text: //000//
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1999,7 +1999,7 @@ GameObject:
   - component: {fileID: 271330935}
   - component: {fileID: 271330934}
   m_Layer: 5
-  m_Name: Text
+  m_Name: WaterHealthText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2044,7 +2044,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: HEALTH
+  m_text: //000//
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2910,7 +2910,7 @@ GameObject:
   - component: {fileID: 366022042}
   - component: {fileID: 366022041}
   m_Layer: 5
-  m_Name: Text
+  m_Name: FireTagText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2955,7 +2955,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: FIRE
+  m_text: //000//
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3044,7 +3044,7 @@ GameObject:
   - component: {fileID: 372823511}
   - component: {fileID: 372823510}
   m_Layer: 5
-  m_Name: Text
+  m_Name: WaterTagText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3089,7 +3089,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: WATER
+  m_text: //000//
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3536,7 +3536,7 @@ GameObject:
   - component: {fileID: 461759749}
   - component: {fileID: 461759748}
   m_Layer: 5
-  m_Name: Text
+  m_Name: PlantStatueText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3581,7 +3581,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: STATUE
+  m_text: //000//
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3746,7 +3746,7 @@ GameObject:
   - component: {fileID: 472256773}
   - component: {fileID: 472256772}
   m_Layer: 5
-  m_Name: Text
+  m_Name: PlantHealthText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3791,7 +3791,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: HEALTH
+  m_text: //000//
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3918,7 +3918,7 @@ GameObject:
   - component: {fileID: 473987966}
   - component: {fileID: 473987965}
   m_Layer: 5
-  m_Name: Text
+  m_Name: PlantMouseText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3963,7 +3963,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: MICE
+  m_text: //000//
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4290,7 +4290,7 @@ GameObject:
   - component: {fileID: 504394631}
   - component: {fileID: 504394630}
   m_Layer: 5
-  m_Name: Text
+  m_Name: MagicHealthText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4335,7 +4335,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: HEALTH
+  m_text: //000//
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5085,7 +5085,7 @@ GameObject:
   - component: {fileID: 578296041}
   - component: {fileID: 578296040}
   m_Layer: 5
-  m_Name: Text
+  m_Name: MagicTagText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5130,7 +5130,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: MAGIC
+  m_text: //000//
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6474,7 +6474,7 @@ GameObject:
   - component: {fileID: 654199749}
   - component: {fileID: 654199748}
   m_Layer: 5
-  m_Name: Text
+  m_Name: GreenText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6519,7 +6519,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: GREEN
+  m_text: //000//
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -7470,6 +7470,7 @@ MonoBehaviour:
     m_InternalValue: 0
   charSelectionScreen: {fileID: 815356770}
   beginningCountDown: {fileID: 1760282188}
+  endOfGameScript: {fileID: 760840610}
 --- !u!4 &760840609
 Transform:
   m_ObjectHideFlags: 0
@@ -7503,7 +7504,8 @@ MonoBehaviour:
   winText: {fileID: 816716530}
   loseText: {fileID: 738628214}
   endLevelAudio: {fileID: 271978496}
-  lboardConRef: {fileID: 1813221564}
+  gameEnded:
+    m_InternalValue: 0
 --- !u!114 &760840611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7763,7 +7765,7 @@ GameObject:
   - component: {fileID: 810347969}
   - component: {fileID: 810347968}
   m_Layer: 5
-  m_Name: Text
+  m_Name: WScoreText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7808,7 +7810,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: SCORE
+  m_text: //000//
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -8484,7 +8486,7 @@ GameObject:
   - component: {fileID: 851060415}
   - component: {fileID: 851060414}
   m_Layer: 5
-  m_Name: Text
+  m_Name: MagicMouseText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8529,7 +8531,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: MICE
+  m_text: //000//
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -12663,7 +12665,7 @@ GameObject:
   - component: {fileID: 1273589083}
   - component: {fileID: 1273589082}
   m_Layer: 5
-  m_Name: Text
+  m_Name: FScoreText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12708,7 +12710,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: SCORE
+  m_text: //000//
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -13031,7 +13033,7 @@ GameObject:
   - component: {fileID: 1311175765}
   - component: {fileID: 1311175764}
   m_Layer: 5
-  m_Name: Text
+  m_Name: PurpleText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13076,7 +13078,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: PURPLE
+  m_text: //000//
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -13451,7 +13453,7 @@ GameObject:
   - component: {fileID: 1391268592}
   - component: {fileID: 1391268591}
   m_Layer: 5
-  m_Name: Text
+  m_Name: PScoreText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13496,7 +13498,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: SCORE
+  m_text: //000//
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -13585,7 +13587,7 @@ GameObject:
   - component: {fileID: 1392022023}
   - component: {fileID: 1392022022}
   m_Layer: 5
-  m_Name: Text
+  m_Name: WaterStatueText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13630,7 +13632,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: STATUE
+  m_text: //000//
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -15280,7 +15282,7 @@ GameObject:
   - component: {fileID: 1492580913}
   - component: {fileID: 1492580912}
   m_Layer: 5
-  m_Name: Text
+  m_Name: PlantTagText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15325,7 +15327,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: PLANT
+  m_text: //000//
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -16070,7 +16072,7 @@ GameObject:
   - component: {fileID: 1630501232}
   - component: {fileID: 1630501231}
   m_Layer: 5
-  m_Name: Text
+  m_Name: RedText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16115,7 +16117,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: RED
+  m_text: //000//
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -16787,7 +16789,7 @@ GameObject:
   - component: {fileID: 1704599163}
   - component: {fileID: 1704599162}
   m_Layer: 5
-  m_Name: Text
+  m_Name: MScoreText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16832,7 +16834,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: SCORE
+  m_text: //000//
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -16978,7 +16980,7 @@ GameObject:
   - component: {fileID: 1715567517}
   - component: {fileID: 1715567516}
   m_Layer: 5
-  m_Name: Text
+  m_Name: MagicStatueText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17023,7 +17025,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: STATUE
+  m_text: //000//
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -18243,7 +18245,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1813221563}
-  - component: {fileID: 1813221564}
   m_Layer: 5
   m_Name: GO/LBScreen
   m_TagString: Untagged
@@ -18277,43 +18278,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1813221564
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1813221562}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9bc1f0d60ad9979469437f7c0792a3b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Red: {fileID: 1630501231}
-  Blue: {fileID: 1987399744}
-  Green: {fileID: 654199748}
-  Purple: {fileID: 1311175764}
-  FireTag: {fileID: 366022041}
-  WaterTag: {fileID: 372823510}
-  PlantTag: {fileID: 1492580912}
-  MagicTag: {fileID: 578296040}
-  FireHealthText: {fileID: 2026335188}
-  WaterHealthText: {fileID: 271330934}
-  PlantHealthText: {fileID: 472256772}
-  MagicHealthText: {fileID: 504394630}
-  FireMouceText: {fileID: 100566954}
-  WaterMouceText: {fileID: 2073760168}
-  PlantMouceText: {fileID: 473987965}
-  MagicMouceText: {fileID: 851060414}
-  FireStatueText: {fileID: 1875817254}
-  WaterStatueText: {fileID: 1392022022}
-  PlantStatueText: {fileID: 461759748}
-  MagicStatueText: {fileID: 1715567516}
-  FScore: {fileID: 1273589082}
-  WScore: {fileID: 810347968}
-  PScore: {fileID: 1391268591}
-  MScore: {fileID: 1704599162}
-  levelTimerReference: {fileID: 580663073}
 --- !u!1 &1829523313
 GameObject:
   m_ObjectHideFlags: 0
@@ -18649,7 +18613,7 @@ GameObject:
   - component: {fileID: 1875817255}
   - component: {fileID: 1875817254}
   m_Layer: 5
-  m_Name: Text
+  m_Name: FireStatueText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18694,7 +18658,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: STATUE
+  m_text: //000//
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -20137,7 +20101,7 @@ GameObject:
   - component: {fileID: 1987399745}
   - component: {fileID: 1987399744}
   m_Layer: 5
-  m_Name: Text
+  m_Name: BlueText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20182,7 +20146,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: BLUE
+  m_text: //000//
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -20578,7 +20542,7 @@ GameObject:
   - component: {fileID: 2026335189}
   - component: {fileID: 2026335188}
   m_Layer: 5
-  m_Name: Text
+  m_Name: FireHealthText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20623,7 +20587,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: HEALTH
+  m_text: //000//
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -21483,7 +21447,7 @@ GameObject:
   - component: {fileID: 2073760169}
   - component: {fileID: 2073760168}
   m_Layer: 5
-  m_Name: Text
+  m_Name: WaterMouseText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21528,7 +21492,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: MICE
+  m_text: //000//
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

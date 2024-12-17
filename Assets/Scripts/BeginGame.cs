@@ -12,7 +12,7 @@ public class BeginGame : NetworkBehaviour
     private bool hasTeleported = false;
     private bool countdownPlayed = false;
     public AudioSource beginningCountDown;
- 
+    public EndOfGame endOfGameScript;
 
     // Start is called before the first frame update
     private void Awake()
@@ -73,7 +73,7 @@ public class BeginGame : NetworkBehaviour
             return;
         }
 
-        if (characterSelected.Value == 4 && !EndOfGame.gameEnded.Value) // Ensure game hasn't ended
+        if (characterSelected.Value == 4 && !endOfGameScript.gameEnded.Value) // Ensure game hasn't ended
         {
             // Transition UI
             charSelectionScreen.SetActive(false);

@@ -1,196 +1,205 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
-using static PlayerCollision;
+using Unity.Netcode;
+using UnityEngine;
 
-public class LeaderboardController : MonoBehaviour
+public class LeaderboardController : NetworkBehaviour
 {
-    //playerTag Display
+    private NewPlayerController newPlayerController;
+    private PlayerCollision playerCollision;
+    private CatHealth catHealth;
+    private EndOfGame endOfGameReference;
+    //display colour
     public TMP_Text Red;
     public TMP_Text Blue;
     public TMP_Text Green;
     public TMP_Text Purple;
 
-    //playerTag Display
+    // Player Tag Display
     public TMP_Text FireTag;
     public TMP_Text WaterTag;
     public TMP_Text PlantTag;
     public TMP_Text MagicTag;
 
-    //health variable display
+    // Health Variable Display
     public TMP_Text FireHealthText;
     public TMP_Text WaterHealthText;
     public TMP_Text PlantHealthText;
     public TMP_Text MagicHealthText;
 
-    //mouse score display
-    public TMP_Text FireMouceText;
-    public TMP_Text WaterMouceText;
-    public TMP_Text PlantMouceText;
-    public TMP_Text MagicMouceText;
+    // Mouse Score Display
+    public TMP_Text FireMouseText;
+    public TMP_Text WaterMouseText;
+    public TMP_Text PlantMouseText;
+    public TMP_Text MagicMouseText;
 
-    //statue score display
+    // Statue Score Display
     public TMP_Text FireStatueText;
     public TMP_Text WaterStatueText;
     public TMP_Text PlantStatueText;
     public TMP_Text MagicStatueText;
 
-    //OverallScoreDisplay...
+    // Overall Score Display
     public TMP_Text FScore;
     public TMP_Text WScore;
     public TMP_Text PScore;
     public TMP_Text MScore;
 
 
-    public LevelTimer levelTimerReference;
 
-
-
-
-    public void CheckPlayers()
+    public void Search()
     {
-        // Find all players tagged "Player"
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        Debug.Log("Found " + players.Length + " players tagged as 'Player'.");
 
-        foreach (GameObject player in players)
+        Red = GameObject.Find("RedText").GetComponent<TMP_Text>();
+        Blue = GameObject.Find("BlueText").GetComponent<TMP_Text>();
+        Green = GameObject.Find("GreenText").GetComponent<TMP_Text>();
+        Purple = GameObject.Find("PurpleText").GetComponent<TMP_Text>();
+
+        FireTag = GameObject.Find("FireTagText").GetComponent<TMP_Text>();
+        WaterTag = GameObject.Find("WaterTagText").GetComponent<TMP_Text>();
+        PlantTag = GameObject.Find("PlantTagText").GetComponent<TMP_Text>();
+        MagicTag = GameObject.Find("MagicTagText").GetComponent<TMP_Text>();
+
+        FireHealthText = GameObject.Find("FireHealthText").GetComponent<TMP_Text>();
+        WaterHealthText = GameObject.Find("WaterHealthText").GetComponent<TMP_Text>();
+        PlantHealthText = GameObject.Find("PlantHealthText").GetComponent<TMP_Text>();
+        MagicHealthText = GameObject.Find("MagicHealthText").GetComponent<TMP_Text>();
+
+        FireMouseText = GameObject.Find("FireMouseText").GetComponent<TMP_Text>();
+        WaterMouseText = GameObject.Find("WaterMouseText").GetComponent<TMP_Text>();
+        PlantMouseText = GameObject.Find("PlantMouseText").GetComponent<TMP_Text>();
+        MagicMouseText = GameObject.Find("MagicMouseText").GetComponent<TMP_Text>();
+
+        FireStatueText = GameObject.Find("FireStatueText").GetComponent<TMP_Text>();
+        WaterStatueText = GameObject.Find("WaterStatueText").GetComponent<TMP_Text>();
+        PlantStatueText = GameObject.Find("PlantStatueText").GetComponent<TMP_Text>();
+        MagicStatueText = GameObject.Find("MagicStatueText").GetComponent<TMP_Text>();
+
+        FScore = GameObject.Find("FScoreText").GetComponent<TMP_Text>();
+        WScore = GameObject.Find("WScoreText").GetComponent<TMP_Text>();
+        PScore = GameObject.Find("PScoreText").GetComponent<TMP_Text>();
+        MScore = GameObject.Find("MScoreText").GetComponent<TMP_Text>();
+    }
+
+    // Function to access the required scripts from the current GameObject
+    public void InitializePlayerComponents()
+    {
+        newPlayerController = this.gameObject.GetComponent<NewPlayerController>();
+        playerCollision = this.gameObject.GetComponent<PlayerCollision>();
+        catHealth = this.gameObject.GetComponent<CatHealth>();
+        endOfGameReference = GameObject.Find("LevelController").GetComponent<EndOfGame>();
+
+
+        if (newPlayerController == null)
+            Debug.LogError("NewPlayerController script not found on " + this.gameObject.name);
+        if (playerCollision == null)
+            Debug.LogError("PlayerCollision script not found on " + this.gameObject.name);
+        if (catHealth == null)
+            Debug.LogError("CatHealth script not found on " + this.gameObject.name);
+    }
+
+    // Function to check the world type based on the NewPlayerController flags
+
+
+
+    public void Update()
+    {
+        InitializePlayerComponents();
+        Search();
+        GetPlayerWorldType();
+    }
+    public void GetPlayerWorldType()
+    {
+        if (newPlayerController == null)
         {
-            // Debug for each player
-            Debug.Log("Checking player: " + player.name);
-
-            PlayerCollision playerCollision = player.GetComponent<PlayerCollision>();
-            CatHealth catHealth = player.GetComponent<CatHealth>();
-            LevelTimer levelTimer = player.GetComponent<LevelTimer>();
-
-            if (playerCollision != null && catHealth != null && levelTimer != null)
-            {
-                Debug.Log("Player components found: PlayerCollision, CatHealth, LevelTimer");
-
-                // Check the playerType and assign the appropriate tag to the TMP_Text field
-                switch (playerCollision.playerType)
-                {
-                    case PlayerType.Fire:
-                        Debug.Log("Player type is Fire");
-
-                        if (Red != null)
-                        {
-                            Debug.Log("Setting Red Text");
-                            Red.text = "Red";
-                        }
-
-                        if (FireTag != null)
-                        {
-                            Debug.Log("Setting FireTag Text");
-                            FireTag.text = "Fire";
-                        }
-
-                        if (FScore != null)
-                        {
-                            Debug.Log("Setting Fire Score");
-                            FScore.text = levelTimer.onlineScoreData.Value.levelScore_score.ToString();
-                        }
-
-                        if (FireHealthText != null)
-                        {
-                            Debug.Log("Setting Fire Health Text");
-                            FireHealthText.text = "Health: " + catHealth.currentCatHealth.ToString();
-                        }
-                        break;
-
-                    case PlayerType.Water:
-                        Debug.Log("Player type is Water");
-
-                        if (Blue != null)
-                        {
-                            Debug.Log("Setting Blue Text");
-                            Blue.text = "Blue";
-                        }
-
-                        if (WaterTag != null)
-                        {
-                            Debug.Log("Setting WaterTag Text");
-                            WaterTag.text = "Water";
-                        }
-
-                        if (WScore != null)
-                        {
-                            Debug.Log("Setting Water Score");
-                            WScore.text = levelTimer.onlineScoreData.Value.levelScore_score.ToString();
-                        }
-
-                        if (WaterHealthText != null)
-                        {
-                            Debug.Log("Setting Water Health Text");
-                            WaterHealthText.text = "Health: " + catHealth.currentCatHealth.ToString();
-                        }
-                        break;
-
-                    case PlayerType.Plant:
-                        Debug.Log("Player type is Plant");
-
-                        if (Green != null)
-                        {
-                            Debug.Log("Setting Green Text");
-                            Green.text = "Green";
-                        }
-
-                        if (PlantTag != null)
-                        {
-                            Debug.Log("Setting PlantTag Text");
-                            PlantTag.text = "Plant";
-                        }
-
-                        if (PScore != null)
-                        {
-                            Debug.Log("Setting Plant Score");
-                            PScore.text = levelTimer.onlineScoreData.Value.levelScore_score.ToString();
-                        }
-
-                        if (PlantHealthText != null)
-                        {
-                            Debug.Log("Setting Plant Health Text");
-                            PlantHealthText.text = "Health: " + catHealth.currentCatHealth.ToString();
-                        }
-                        break;
-
-                    case PlayerType.Magic:
-                        Debug.Log("Player type is Magic");
-
-                        if (Purple != null)
-                        {
-                            Debug.Log("Setting Purple Text");
-                            Purple.text = "Purple";
-                        }
-
-                        if (MagicTag != null)
-                        {
-                            Debug.Log("Setting MagicTag Text");
-                            MagicTag.text = "Magic";
-                        }
-
-                        if (MScore != null)
-                        {
-                            Debug.Log("Setting Magic Score");
-                            MScore.text = levelTimer.onlineScoreData.Value.levelScore_score.ToString();
-                        }
-
-                        if (MagicHealthText != null)
-                        {
-                            Debug.Log("Setting Magic Health Text");
-                            MagicHealthText.text = "Health: " + catHealth.currentCatHealth.ToString();
-                        }
-                        break;
-
-                    default:
-                        Debug.Log("Unknown PlayerType.");
-                        break;
-                }
-            }
-            else
-            {
-                Debug.LogWarning("Player components are missing on: " + player.name);
-            }
+            Debug.LogError("NewPlayerController is not initialized!");
+         
         }
+
+        if (newPlayerController.isWaterWorld)
+        {
+            Debug.Log("Water World detected.");
+            DisplayWaterInfo();
+       
+        }
+        else if (newPlayerController.isFireWorld)
+        {
+            Debug.Log("Fire World detected.");
+            DisplayFireInfo();
+      
+        }
+        else if (newPlayerController.isPlantWorld)
+        {
+            Debug.Log("Plant World detected.");
+            DisplayPlantInfo();
+     
+        }
+        else if (newPlayerController.isMagicWorld)
+        {
+            Debug.Log("Magic World detected.");
+            DisplayMagicInfo();
+      
+        }
+        else
+        {
+            Debug.Log("No world detected.");
+      
+        }
+    }
+
+    private void DisplayFireInfo()
+    {
+        Debug.Log("Displaying Fire World Info");
+        if (Red != null) Red.text = "Red"; // Example: setting color to Red
+        if (FireTag != null) FireTag.text = "Fire";
+
+        // Replace with actual dynamic data as needed
+        if (FScore != null) FScore.text = "100"; // Example score
+        if (FireMouseText != null) FireMouseText.text = "3 Mice Collected";
+        if (FireStatueText != null) FireStatueText.text = "1 Statue Active";
+        if (FireHealthText != null) FireHealthText.text = "80 HP";
+    }
+
+    // Display information for Water World
+    private void DisplayWaterInfo()
+    {
+        Debug.Log("Displaying Water World Info");
+        if (Blue != null) Blue.text = "Blue";
+        if (WaterTag != null) WaterTag.text = "Water";
+
+        // Replace with actual dynamic data as needed
+        if (WScore != null) WScore.text = "200";
+        if (WaterMouseText != null) WaterMouseText.text = "5 Mice Collected";
+        if (WaterStatueText != null) WaterStatueText.text = "2 Statues Active";
+        if (WaterHealthText != null) WaterHealthText.text = "90 HP";
+    }
+
+    // Display information for Plant World
+    private void DisplayPlantInfo()
+    {
+        Debug.Log("Displaying Plant World Info");
+        if (Green != null) Green.text = "Green";
+        if (PlantTag != null) PlantTag.text = "Plant";
+
+        // Replace with actual dynamic data as needed
+        if (PScore != null) PScore.text = "150";
+        if (PlantMouseText != null) PlantMouseText.text = "4 Mice Collected";
+        if (PlantStatueText != null) PlantStatueText.text = "3 Statues Active";
+        if (PlantHealthText != null) PlantHealthText.text = "70 HP";
+    }
+
+    // Display information for Magic World
+    private void DisplayMagicInfo()
+    {
+        Debug.Log("Displaying Magic World Info");
+        if (Purple != null) Purple.text = "Purple";
+        if (MagicTag != null) MagicTag.text = "Magic";
+
+        // Replace with actual dynamic data as needed
+        if (MScore != null) MScore.text = "300";
+        if (MagicMouseText != null) MagicMouseText.text = "6 Mice Collected";
+        if (MagicStatueText != null) MagicStatueText.text = "4 Statues Active";
+        if (MagicHealthText != null) MagicHealthText.text = "95 HP";
     }
 }
