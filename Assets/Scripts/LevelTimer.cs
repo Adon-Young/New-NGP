@@ -1,4 +1,3 @@
-
 using System.Collections;
 using TMPro;
 using Unity.Netcode;
@@ -6,9 +5,21 @@ using UnityEngine;
 
 public class LevelTimer : NetworkBehaviour
 {
+    
+
     public TMP_Text scoreText;
+    public TMP_Text fireScoreText;
+    public TMP_Text waterScoreText;
+    public TMP_Text plantScoreText;
+    public TMP_Text magicScoreText;
+    public EndOfGame endOfGameReference;
     public TMP_Text countdownText;
     public TMP_Text levelTimer;
+    public TMP_Text fireLevelTimerText;
+    public TMP_Text waterLevelTimerText;
+    public TMP_Text plantLevelTimerText;
+    public TMP_Text magicLevelTimerText;
+
     private bool isGameOver = false; // Tracks if the game has ended
     public bool IsGameOver => isGameOver;
     public int timeLimit = 300;
@@ -22,6 +33,9 @@ public class LevelTimer : NetworkBehaviour
 
     // Network variable for countdown state
     public NetworkVariable<int> countdownValue = new NetworkVariable<int>(3, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server); // Start countdown from 3
+
+    // Network variable for time synchronization
+    public NetworkVariable<float> onlineTimeData = new NetworkVariable<float>(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     [System.Serializable]
     public struct MyScoreMechanics : INetworkSerializable
@@ -40,6 +54,7 @@ public class LevelTimer : NetworkBehaviour
 
     private void Start()
     {
+    
         score = 0;
         UpdateScoreText();
     }
@@ -62,7 +77,17 @@ public class LevelTimer : NetworkBehaviour
         {
             countdownText.text = countdownValue.Value.ToString();
         }
+
+        if (IsServer)  // Ensure only the server (including host) processes the score reset
+        {
+            if (endOfGameReference.gameResult.Value == -1)
+            {
+                // Reset score to 0 for all clients
+                ResetScore();
+            }
+        }
     }
+ 
 
     private IEnumerator CountdownCoroutine()
     {
@@ -96,14 +121,27 @@ public class LevelTimer : NetworkBehaviour
 
     private void UpdateScoreText()
     {
+        // Update all score UI elements
         scoreText.text = "Score: " + score;
+        fireScoreText.text = "" + score;
+        waterScoreText.text = "" + score;
+        plantScoreText.text = "" + score;
+        magicScoreText.text = "" + score;
     }
 
     private void UpdateLevelTimerText()
     {
         int minutes = Mathf.FloorToInt(timeTaken / 60F);
         int seconds = Mathf.FloorToInt(timeTaken % 60F);
-        levelTimer.text = $"Time: {minutes:00}:{seconds:00}";
+
+        string timeText = $"{minutes:00}:{seconds:00}";
+
+        // Update all level timer UI elements
+        levelTimer.text = "Time: " + timeText;
+        fireLevelTimerText.text = "" + timeText;
+        waterLevelTimerText.text = "" + timeText;
+        plantLevelTimerText.text = "" + timeText;
+        magicLevelTimerText.text = "" + timeText;
     }
 
     private void ResetLevel()
@@ -112,8 +150,6 @@ public class LevelTimer : NetworkBehaviour
         levelComplete = true;  // Mark the level as complete
     }
 
-
-
     // Separate function to reset the score only when you want to
     public void ResetScore()
     {
@@ -121,11 +157,6 @@ public class LevelTimer : NetworkBehaviour
         UpdateScoreText();
         UpdateOnlineDataUsingLocalValues(); // Update struct data with the new local values
     }
-
-
-
-
-
 
     //----------------------------------------------------------------------------------------------------------
     // Network functions...
@@ -141,7 +172,9 @@ public class LevelTimer : NetworkBehaviour
 
         onlineScoreData.Value = newScoreData; // Update the network variable with server-side data
     }
+
     //----------------------------------------------------------------------------------------------------------
+
     [ServerRpc]
     public void StartTimerServerRpc()
     {
@@ -164,7 +197,6 @@ public class LevelTimer : NetworkBehaviour
         StartCoroutine(CountdownCoroutine());
     }
 
-
     [ServerRpc]
     public void StopTimerServerRpc()
     {
@@ -186,7 +218,11 @@ public class LevelTimer : NetworkBehaviour
     {
         onlineScoreData.Value = newScoreData; // Updates all values in the struct at once
     }
+
+   
+
     //----------------------------------------------------------------------------------------------------------
+
     [ClientRpc]
     public void StopTimerClientRpc()
     {
@@ -214,7 +250,7 @@ public class LevelTimer : NetworkBehaviour
     }
 
     [ClientRpc]
-public void HideCountdownTextClientRpc()
+    public void HideCountdownTextClientRpc()
     {
         countdownText.enabled = false; // Hide the countdown text on all clients
         countdownText.text = ""; // Clear the countdown text

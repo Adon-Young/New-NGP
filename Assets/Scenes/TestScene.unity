@@ -339,7 +339,7 @@ GameObject:
   - component: {fileID: 92121589}
   - component: {fileID: 92121588}
   m_Layer: 5
-  m_Name: OfferingsDelivered
+  m_Name: time
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -700,7 +700,7 @@ GameObject:
   - component: {fileID: 124162553}
   - component: {fileID: 124162552}
   m_Layer: 5
-  m_Name: OfferingsDelivered
+  m_Name: time
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5219,6 +5219,7 @@ GameObject:
   - component: {fileID: 580663071}
   - component: {fileID: 580663070}
   - component: {fileID: 580663073}
+  - component: {fileID: 580663074}
   m_Layer: 0
   m_Name: Level 1 Scenes
   m_TagString: Untagged
@@ -5310,9 +5311,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14fb3f44a4fa87b478487a3612474f64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  endOfGameReference: {fileID: 760840610}
   scoreText: {fileID: 1136431399}
+  fireScoreText: {fileID: 1273589082}
+  waterScoreText: {fileID: 810347968}
+  plantScoreText: {fileID: 1391268591}
+  magicScoreText: {fileID: 1704599162}
   countdownText: {fileID: 1538615881}
   levelTimer: {fileID: 1042986407}
+  fireLevelTimerText: {fileID: 1875817254}
+  waterLevelTimerText: {fileID: 1392022022}
+  plantLevelTimerText: {fileID: 461759748}
+  magicLevelTimerText: {fileID: 1715567516}
   timeLimit: 300
   onlineScoreData:
     m_InternalValue:
@@ -5321,6 +5331,36 @@ MonoBehaviour:
       endOfCounttDownTimer_timerRunning: 0
   countdownValue:
     m_InternalValue: 3
+  onlineTimeData:
+    m_InternalValue: 0
+--- !u!114 &580663074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 580663068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 713663c27d158a8479405d8a8ae805ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Red: {fileID: 1630501231}
+  Blue: {fileID: 1987399744}
+  Green: {fileID: 654199748}
+  Purple: {fileID: 1311175764}
+  FireTag: {fileID: 366022041}
+  WaterTag: {fileID: 372823510}
+  PlantTag: {fileID: 1492580912}
+  MagicTag: {fileID: 578296040}
+  FireHealthText: {fileID: 2026335188}
+  WaterHealthText: {fileID: 271330934}
+  PlantHealthText: {fileID: 472256772}
+  MagicHealthText: {fileID: 504394630}
+  FireMouseText: {fileID: 100566954}
+  WaterMouseText: {fileID: 2073760168}
+  PlantMouseText: {fileID: 473987965}
+  MagicMouseText: {fileID: 851060414}
 --- !u!1 &590122633
 GameObject:
   m_ObjectHideFlags: 0
@@ -6089,7 +6129,7 @@ GameObject:
   - component: {fileID: 645951295}
   - component: {fileID: 645951294}
   m_Layer: 5
-  m_Name: OfferingsDelivered
+  m_Name: time
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7219,7 +7259,7 @@ GameObject:
   - component: {fileID: 753739931}
   - component: {fileID: 753739930}
   m_Layer: 5
-  m_Name: OfferingsDelivered
+  m_Name: time
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7505,6 +7545,8 @@ MonoBehaviour:
   loseText: {fileID: 738628214}
   endLevelAudio: {fileID: 271978496}
   gameEnded:
+    m_InternalValue: 0
+  gameResult:
     m_InternalValue: 0
 --- !u!114 &760840611
 MonoBehaviour:
@@ -10903,7 +10945,7 @@ GameObject:
   - component: {fileID: 1061933622}
   - component: {fileID: 1061933621}
   m_Layer: 5
-  m_Name: OfferingsDelivered
+  m_Name: Level Timer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20453,7 +20495,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: MICE DELIVERED
+  m_text: LEVEL TIMER
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

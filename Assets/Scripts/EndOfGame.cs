@@ -10,10 +10,10 @@ public class EndOfGame : NetworkBehaviour
     public GameObject winText; // UI element for the win message
     public GameObject loseText; // UI element for the lose message
     public AudioSource endLevelAudio; // Audio source for the end level sound
- 
+
     // Network variables to sync across clients
     public  NetworkVariable<bool> gameEnded = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    public  static NetworkVariable<int> gameResult = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public  NetworkVariable<int> gameResult = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
 
 
@@ -138,6 +138,7 @@ public class EndOfGame : NetworkBehaviour
         {
             winText.SetActive(false);
             loseText.SetActive(true);
+
         }
     }
 }

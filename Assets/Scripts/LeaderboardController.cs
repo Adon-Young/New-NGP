@@ -34,17 +34,6 @@ public class LeaderboardController : NetworkBehaviour
     public TMP_Text PlantMouseText;
     public TMP_Text MagicMouseText;
 
-    // Statue Score Display
-    public TMP_Text FireStatueText;
-    public TMP_Text WaterStatueText;
-    public TMP_Text PlantStatueText;
-    public TMP_Text MagicStatueText;
-
-    // Overall Score Display
-    public TMP_Text FScore;
-    public TMP_Text WScore;
-    public TMP_Text PScore;
-    public TMP_Text MScore;
 
 
 
@@ -71,15 +60,6 @@ public class LeaderboardController : NetworkBehaviour
         PlantMouseText = GameObject.Find("PlantMouseText").GetComponent<TMP_Text>();
         MagicMouseText = GameObject.Find("MagicMouseText").GetComponent<TMP_Text>();
 
-        FireStatueText = GameObject.Find("FireStatueText").GetComponent<TMP_Text>();
-        WaterStatueText = GameObject.Find("WaterStatueText").GetComponent<TMP_Text>();
-        PlantStatueText = GameObject.Find("PlantStatueText").GetComponent<TMP_Text>();
-        MagicStatueText = GameObject.Find("MagicStatueText").GetComponent<TMP_Text>();
-
-        FScore = GameObject.Find("FScoreText").GetComponent<TMP_Text>();
-        WScore = GameObject.Find("WScoreText").GetComponent<TMP_Text>();
-        PScore = GameObject.Find("PScoreText").GetComponent<TMP_Text>();
-        MScore = GameObject.Find("MScoreText").GetComponent<TMP_Text>();
     }
 
     // Function to access the required scripts from the current GameObject
@@ -153,11 +133,7 @@ public class LeaderboardController : NetworkBehaviour
         Debug.Log("Displaying Fire World Info");
         if (Red != null) Red.text = "Red"; // Example: setting color to Red
         if (FireTag != null) FireTag.text = "Fire";
-
-        // Replace with actual dynamic data as needed
-        if (FScore != null) FScore.text = "100"; // Example score
         if (FireMouseText != null) FireMouseText.text = "3 Mice Collected";
-        if (FireStatueText != null) FireStatueText.text = "1 Statue Active";
         if (FireHealthText != null) FireHealthText.text = "80 HP";
     }
 
@@ -167,11 +143,7 @@ public class LeaderboardController : NetworkBehaviour
         Debug.Log("Displaying Water World Info");
         if (Blue != null) Blue.text = "Blue";
         if (WaterTag != null) WaterTag.text = "Water";
-
-        // Replace with actual dynamic data as needed
-        if (WScore != null) WScore.text = "200";
         if (WaterMouseText != null) WaterMouseText.text = "5 Mice Collected";
-        if (WaterStatueText != null) WaterStatueText.text = "2 Statues Active";
         if (WaterHealthText != null) WaterHealthText.text = "90 HP";
     }
 
@@ -181,11 +153,7 @@ public class LeaderboardController : NetworkBehaviour
         Debug.Log("Displaying Plant World Info");
         if (Green != null) Green.text = "Green";
         if (PlantTag != null) PlantTag.text = "Plant";
-
-        // Replace with actual dynamic data as needed
-        if (PScore != null) PScore.text = "150";
         if (PlantMouseText != null) PlantMouseText.text = "4 Mice Collected";
-        if (PlantStatueText != null) PlantStatueText.text = "3 Statues Active";
         if (PlantHealthText != null) PlantHealthText.text = "70 HP";
     }
 
@@ -195,11 +163,7 @@ public class LeaderboardController : NetworkBehaviour
         Debug.Log("Displaying Magic World Info");
         if (Purple != null) Purple.text = "Purple";
         if (MagicTag != null) MagicTag.text = "Magic";
-
-        // Replace with actual dynamic data as needed
-        if (MScore != null) MScore.text = "300";
         if (MagicMouseText != null) MagicMouseText.text = "6 Mice Collected";
-        if (MagicStatueText != null) MagicStatueText.text = "4 Statues Active";
         if (MagicHealthText != null) MagicHealthText.text = "95 HP";
     }
 }
