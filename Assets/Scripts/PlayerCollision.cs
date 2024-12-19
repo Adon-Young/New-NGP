@@ -5,9 +5,8 @@ using TMPro;
 
 public class PlayerCollision : NetworkBehaviour
 {
-    public enum PlayerType { Fire, Water, Magic, Plant }
-    public PlayerType playerType;
-
+    public enum PlayerType {Fire,Water,Magic,Plant}
+    public NetworkVariable<PlayerType> playerType = new NetworkVariable<PlayerType>(PlayerType.Fire, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     // Network variables to track individual player scores and total scores
     //public NetworkVariable<int> networkMouseOfferings = new NetworkVariable<int>(0);  // Player's mouse score
@@ -72,35 +71,41 @@ public class PlayerCollision : NetworkBehaviour
         }
     }
 
-  
+
 
     public void SetPlayerType(string tag)
     {
-        switch (tag)
+        // Determine the new player type based on the tag
+        PlayerType newPlayerType = tag switch
         {
-            case "Water":
-                playerType = PlayerType.Water;
-        
-                break;
-            case "Fire":
-                playerType = PlayerType.Fire;
-          
-                break;
-            case "Plant":
-                playerType = PlayerType.Plant;
-          
-                break;
-            case "Magic":
-                playerType = PlayerType.Magic;
-        
-                break;
-            default:
-                break;
+            "Water" => PlayerType.Water,
+            "Fire" => PlayerType.Fire,
+            "Plant" => PlayerType.Plant,
+            "Magic" => PlayerType.Magic,
+            _ => PlayerType.Fire, // Default to Fire in case of an invalid tag
+        };
+
+        if (IsServer)
+        {
+            playerType.Value = newPlayerType; // Sync the value to all clients if we are on the server
+        }
+        else
+        {
+            SetPlayerTypeServerRpc(newPlayerType); // Call ServerRpc to sync the value on the server
         }
     }
-  public PlayerType GetCurrentPlayerType()
+
+    // ServerRpc to sync the playerType across the network
+    [ServerRpc]
+    private void SetPlayerTypeServerRpc(PlayerType newPlayerType)
     {
-        return playerType;
+        playerType.Value = newPlayerType; // This will update the playerType on the server
+    }
+
+    // Corrected GetCurrentPlayerType to return the NetworkVariable value
+    public PlayerType GetCurrentPlayerType()
+    {
+        return playerType.Value; // Return the synced NetworkVariable value
     }
 
     void OnTriggerEnter2D(Collider2D other)

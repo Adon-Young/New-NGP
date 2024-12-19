@@ -46,7 +46,7 @@ public class NewColourSelection : NetworkBehaviour
                 if (playerCollision != null)
                 {
                     playerCollision.SetPlayerType(playerTag);
-                    Debug.Log($"Character selected: {playerTag}, Color: {playerColor}, PlayerType: {playerCollision.GetCurrentPlayerType()}");
+                  
                 }
 
            

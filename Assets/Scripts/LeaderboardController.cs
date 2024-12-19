@@ -1,169 +1,88 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using TMPro;
 
-public class LeaderboardController : NetworkBehaviour
+public class LeaderboardManager : NetworkBehaviour
 {
-    private NewPlayerController newPlayerController;
-    private PlayerCollision playerCollision;
-    private CatHealth catHealth;
-    private EndOfGame endOfGameReference;
-    //display colour
-    public TMP_Text Red;
-    public TMP_Text Blue;
-    public TMP_Text Green;
-    public TMP_Text Purple;
+    public TMP_Text FireHealth;
+    public TMP_Text WaterHealth;
+    public TMP_Text PlantHealth;
+    public TMP_Text MagicHealth;
 
-    // Player Tag Display
-    public TMP_Text FireTag;
-    public TMP_Text WaterTag;
-    public TMP_Text PlantTag;
-    public TMP_Text MagicTag;
+    float waterCatHealth;
+    float fireCatHealth;
+    float plantCatHealth;
+    float magicCatHealth;
 
-    // Health Variable Display
-    public TMP_Text FireHealthText;
-    public TMP_Text WaterHealthText;
-    public TMP_Text PlantHealthText;
-    public TMP_Text MagicHealthText;
-
-    // Mouse Score Display
-    public TMP_Text FireMouseText;
-    public TMP_Text WaterMouseText;
-    public TMP_Text PlantMouseText;
-    public TMP_Text MagicMouseText;
-
-
-
-
-    public void Search()
+    void Update()
     {
+        // Only the server processes leaderboard updates
+        if (!IsServer) return;
 
-        Red = GameObject.Find("RedText").GetComponent<TMP_Text>();
-        Blue = GameObject.Find("BlueText").GetComponent<TMP_Text>();
-        Green = GameObject.Find("GreenText").GetComponent<TMP_Text>();
-        Purple = GameObject.Find("PurpleText").GetComponent<TMP_Text>();
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        Debug.Log($"Number of players found: {players.Length}");
 
-        FireTag = GameObject.Find("FireTagText").GetComponent<TMP_Text>();
-        WaterTag = GameObject.Find("WaterTagText").GetComponent<TMP_Text>();
-        PlantTag = GameObject.Find("PlantTagText").GetComponent<TMP_Text>();
-        MagicTag = GameObject.Find("MagicTagText").GetComponent<TMP_Text>();
-
-        FireHealthText = GameObject.Find("FireHealthText").GetComponent<TMP_Text>();
-        WaterHealthText = GameObject.Find("WaterHealthText").GetComponent<TMP_Text>();
-        PlantHealthText = GameObject.Find("PlantHealthText").GetComponent<TMP_Text>();
-        MagicHealthText = GameObject.Find("MagicHealthText").GetComponent<TMP_Text>();
-
-        FireMouseText = GameObject.Find("FireMouseText").GetComponent<TMP_Text>();
-        WaterMouseText = GameObject.Find("WaterMouseText").GetComponent<TMP_Text>();
-        PlantMouseText = GameObject.Find("PlantMouseText").GetComponent<TMP_Text>();
-        MagicMouseText = GameObject.Find("MagicMouseText").GetComponent<TMP_Text>();
-
-    }
-
-    // Function to access the required scripts from the current GameObject
-    public void InitializePlayerComponents()
-    {
-        newPlayerController = this.gameObject.GetComponent<NewPlayerController>();
-        playerCollision = this.gameObject.GetComponent<PlayerCollision>();
-        catHealth = this.gameObject.GetComponent<CatHealth>();
-        endOfGameReference = GameObject.Find("LevelController").GetComponent<EndOfGame>();
-
-
-        if (newPlayerController == null)
-            Debug.LogError("NewPlayerController script not found on " + this.gameObject.name);
-        if (playerCollision == null)
-            Debug.LogError("PlayerCollision script not found on " + this.gameObject.name);
-        if (catHealth == null)
-            Debug.LogError("CatHealth script not found on " + this.gameObject.name);
-    }
-
-    // Function to check the world type based on the NewPlayerController flags
-
-
-
-    public void Update()
-    {
-        InitializePlayerComponents();
-        Search();
-        GetPlayerWorldType();
-    }
-    public void GetPlayerWorldType()
-    {
-        if (newPlayerController == null)
+        foreach (GameObject player in players)
         {
-            Debug.LogError("NewPlayerController is not initialized!");
-         
+            PlayerCollision playerCollision = player.GetComponent<PlayerCollision>();
+            CatHealth catHealth = player.GetComponent<CatHealth>();
+
+            Debug.Log($"Checking player: {player.name}, has PlayerCollision: {playerCollision != null}, has CatHealth: {catHealth != null}");
+
+            if (playerCollision != null && catHealth != null)
+            {
+                // Accessing the PlayerType via the NetworkVariable.Value
+                Debug.Log($"Player {player.name} has PlayerType: {playerCollision.playerType.Value}, Enum Value: {(int)playerCollision.playerType.Value}");
+
+                // Switch based on the synced PlayerType (using .Value to get the actual networked value)
+                switch (playerCollision.playerType.Value)
+                {
+                    case PlayerCollision.PlayerType.Water:
+                        waterCatHealth = catHealth.currentCatHealth.Value;
+                        break;
+                    case PlayerCollision.PlayerType.Fire:
+                        fireCatHealth = catHealth.currentCatHealth.Value;
+                        break;
+                    case PlayerCollision.PlayerType.Plant:
+                        plantCatHealth = catHealth.currentCatHealth.Value;
+                        break;
+                    case PlayerCollision.PlayerType.Magic:
+                        magicCatHealth = catHealth.currentCatHealth.Value;
+                        break;
+                }
+            }
+            else
+            {
+                // Log if we couldn't find PlayerCollision or CatHealth for a player
+                if (playerCollision == null)
+                    Debug.LogWarning($"Player {player.name} is missing PlayerCollision.");
+                if (catHealth == null)
+                    Debug.LogWarning($"Player {player.name} is missing CatHealth.");
+            }
         }
 
-        if (newPlayerController.isWaterWorld)
-        {
-            Debug.Log("Water World detected.");
-            DisplayWaterInfo();
-       
-        }
-        else if (newPlayerController.isFireWorld)
-        {
-            Debug.Log("Fire World detected.");
-            DisplayFireInfo();
-      
-        }
-        else if (newPlayerController.isPlantWorld)
-        {
-            Debug.Log("Plant World detected.");
-            DisplayPlantInfo();
-     
-        }
-        else if (newPlayerController.isMagicWorld)
-        {
-            Debug.Log("Magic World detected.");
-            DisplayMagicInfo();
-      
-        }
-        else
-        {
-            Debug.Log("No world detected.");
-      
-        }
+        // Update UI for all clients
+        UpdateLeaderboardUIClientRpc(waterCatHealth, fireCatHealth, plantCatHealth, magicCatHealth);
     }
 
-    private void DisplayFireInfo()
+    [ClientRpc]
+    private void UpdateLeaderboardUIClientRpc(float waterHealth, float fireHealth, float plantHealth, float magicHealth)
     {
-        Debug.Log("Displaying Fire World Info");
-        if (Red != null) Red.text = "Red"; // Example: setting color to Red
-        if (FireTag != null) FireTag.text = "Fire";
-        if (FireMouseText != null) FireMouseText.text = "3 Mice Collected";
-        if (FireHealthText != null) FireHealthText.text = "80 HP";
-    }
+        // Ensure the values are not null or incorrect before using them
+        Debug.Log($"Water Health: {waterHealth}, Fire Health: {fireHealth}, Plant Health: {plantHealth}, Magic Health: {magicHealth}");
 
-    // Display information for Water World
-    private void DisplayWaterInfo()
-    {
-        Debug.Log("Displaying Water World Info");
-        if (Blue != null) Blue.text = "Blue";
-        if (WaterTag != null) WaterTag.text = "Water";
-        if (WaterMouseText != null) WaterMouseText.text = "5 Mice Collected";
-        if (WaterHealthText != null) WaterHealthText.text = "90 HP";
-    }
+        // Check if any health value is invalid
+        if (float.IsNaN(waterHealth) || float.IsNaN(fireHealth) || float.IsNaN(plantHealth) || float.IsNaN(magicHealth))
+        {
+            Debug.LogError("One of the health values is invalid (NaN).");
+        }
 
-    // Display information for Plant World
-    private void DisplayPlantInfo()
-    {
-        Debug.Log("Displaying Plant World Info");
-        if (Green != null) Green.text = "Green";
-        if (PlantTag != null) PlantTag.text = "Plant";
-        if (PlantMouseText != null) PlantMouseText.text = "4 Mice Collected";
-        if (PlantHealthText != null) PlantHealthText.text = "70 HP";
-    }
+        // Update UI for all clients
+        WaterHealth.text = $"Water: {waterHealth}";
+        FireHealth.text = $"Fire: {fireHealth}";
+        PlantHealth.text = $"Plant: {plantHealth}";
+        MagicHealth.text = $"Magic: {magicHealth}";
 
-    // Display information for Magic World
-    private void DisplayMagicInfo()
-    {
-        Debug.Log("Displaying Magic World Info");
-        if (Purple != null) Purple.text = "Purple";
-        if (MagicTag != null) MagicTag.text = "Magic";
-        if (MagicMouseText != null) MagicMouseText.text = "6 Mice Collected";
-        if (MagicHealthText != null) MagicHealthText.text = "95 HP";
+        Debug.Log($"Updated leaderboard: Water {waterHealth}, Fire {fireHealth}, Plant {plantHealth}, Magic {magicHealth}");
     }
 }

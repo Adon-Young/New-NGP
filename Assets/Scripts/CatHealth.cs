@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class CatHealth : NetworkBehaviour
 {
-    public NetworkVariable<int> currentCatHealth = new NetworkVariable<int>(3);
+    public NetworkVariable<int> currentCatHealth = new NetworkVariable<int>(3,NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     private int maxCatHealth = 3;
     private int minCatHealth = 0;
     public Text HealthTextOnCanvas;
