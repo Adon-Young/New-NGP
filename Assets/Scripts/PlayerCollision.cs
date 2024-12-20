@@ -8,11 +8,11 @@ public class PlayerCollision : NetworkBehaviour
     public enum PlayerType {Fire,Water,Magic,Plant}
     public NetworkVariable<PlayerType> playerType = new NetworkVariable<PlayerType>(PlayerType.Fire, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-    // Network variables to track individual player scores and total scores
-    //public NetworkVariable<int> networkMouseOfferings = new NetworkVariable<int>(0);  // Player's mouse score
-    //public NetworkVariable<int> networkStatueScore = new NetworkVariable<int>(0);  // Player's statue score
-    //public static NetworkVariable<int> totalMouseOfferings = new NetworkVariable<int>(0);  // Total mouse score for all players
-    //public static NetworkVariable<int> totalStatueScore = new NetworkVariable<int>(0);  // Total statue score for all players
+  
+    public NetworkVariable<int> networkMouseOfferings = new NetworkVariable<int>(0);  // Player's mouse score
+    public NetworkVariable<int> networkStatueScore = new NetworkVariable<int>(0);  // Player's statue score
+    public static NetworkVariable<int> totalMouseOfferings = new NetworkVariable<int>(0);  // Total mouse score for all players
+    public static NetworkVariable<int> totalStatueScore = new NetworkVariable<int>(0);  // Total statue score for all players
     LevelTimer gamesLevelTimerReference;
     NewPlayerController playerController;
     private TMP_Text mouseOfferingsText;  // Reference to the Text UI for displaying the mouse offerings score
@@ -115,7 +115,7 @@ public class PlayerCollision : NetworkBehaviour
             // Get the Mouse component from the collided object
             MouseOffering mouse = other.GetComponent<MouseOffering>();
 
-            if (mouse != null && mouse.mouseType.ToString() == playerType.ToString())
+            if (mouse != null && mouse.mouseType.ToString() == playerType.Value.ToString())
             {
                 if (NetworkManager.Singleton.LocalClientId == OwnerClientId)
                 {

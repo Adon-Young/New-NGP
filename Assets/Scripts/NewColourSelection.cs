@@ -3,10 +3,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using static PlayerCollision;
+using Unity.Collections;
 
 public class NewColourSelection : NetworkBehaviour
 {
-    [SerializeField] private string playerTag; // e.g., "Fire", "Ice", "Plant", "Magic"
+ 
+
+    [SerializeField] public string playerTag; // This is the serialized field for the tag
+
     [SerializeField] private Color playerColor; // Corresponding color for this character
     private NewPlayerController playerController;
     private LevelController levelController; // Reference to the level controller script

@@ -156,6 +156,7 @@ public class LevelTimer : NetworkBehaviour
         score = 0;
         UpdateScoreText();
         UpdateOnlineDataUsingLocalValues(); // Update struct data with the new local values
+        ResetScoreClientRpc();
     }
 
     //----------------------------------------------------------------------------------------------------------
@@ -255,4 +256,12 @@ public class LevelTimer : NetworkBehaviour
         countdownText.enabled = false; // Hide the countdown text on all clients
         countdownText.text = ""; // Clear the countdown text
     }
+
+    [ClientRpc]
+    private void ResetScoreClientRpc()
+    {
+        score = 0; // Reset the local score for each client
+        UpdateScoreText(); // Update the displayed score on the client side
+    }
+
 }

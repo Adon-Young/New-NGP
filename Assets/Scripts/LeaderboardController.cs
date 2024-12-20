@@ -1,6 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 using TMPro;
+using Unity.Collections;
 
 public class LeaderboardManager : NetworkBehaviour
 {
@@ -9,6 +10,68 @@ public class LeaderboardManager : NetworkBehaviour
     public TMP_Text PlantHealth;
     public TMP_Text MagicHealth;
 
+    public TMP_Text FireColour;
+    public TMP_Text WaterColour;
+    public TMP_Text PlantColour;
+    public TMP_Text MagiColour;
+
+    public TMP_Text FireTag;
+    public TMP_Text WaterTag;
+    public TMP_Text PlantTag;
+    public TMP_Text MagicTag;
+
+    private NetworkVariable<FixedString32Bytes> fireColour = new NetworkVariable<FixedString32Bytes>(
+        new FixedString32Bytes(),
+        NetworkVariableReadPermission.Everyone, // Everyone can read
+        NetworkVariableWritePermission.Server   // Only the server can write
+    );
+
+    private NetworkVariable<FixedString32Bytes> waterColour = new NetworkVariable<FixedString32Bytes>(
+        new FixedString32Bytes(),
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+
+    private NetworkVariable<FixedString32Bytes> plantColour = new NetworkVariable<FixedString32Bytes>(
+        new FixedString32Bytes(),
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+
+    private NetworkVariable<FixedString32Bytes> magiColour = new NetworkVariable<FixedString32Bytes>(
+        new FixedString32Bytes(),
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+
+    private NetworkVariable<FixedString32Bytes> fireTag = new NetworkVariable<FixedString32Bytes>(
+    new FixedString32Bytes(),
+    NetworkVariableReadPermission.Everyone, // Everyone can read
+    NetworkVariableWritePermission.Server   // Only the server can write
+);
+
+    private NetworkVariable<FixedString32Bytes> waterTag = new NetworkVariable<FixedString32Bytes>(
+        new FixedString32Bytes(),
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+
+    private NetworkVariable<FixedString32Bytes> plantTag = new NetworkVariable<FixedString32Bytes>(
+        new FixedString32Bytes(),
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+
+    private NetworkVariable<FixedString32Bytes> magicTag = new NetworkVariable<FixedString32Bytes>(
+        new FixedString32Bytes(),
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server
+    );
+
+
+
+
+
     float waterCatHealth;
     float fireCatHealth;
     float plantCatHealth;
@@ -16,73 +79,89 @@ public class LeaderboardManager : NetworkBehaviour
 
     void Update()
     {
+
+
+
+
         // Only the server processes leaderboard updates
         if (!IsServer) return;
 
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        Debug.Log($"Number of players found: {players.Length}");
+
+
 
         foreach (GameObject player in players)
         {
             PlayerCollision playerCollision = player.GetComponent<PlayerCollision>();
             CatHealth catHealth = player.GetComponent<CatHealth>();
 
-            Debug.Log($"Checking player: {player.name}, has PlayerCollision: {playerCollision != null}, has CatHealth: {catHealth != null}");
+
 
             if (playerCollision != null && catHealth != null)
             {
-                // Accessing the PlayerType via the NetworkVariable.Value
-                Debug.Log($"Player {player.name} has PlayerType: {playerCollision.playerType.Value}, Enum Value: {(int)playerCollision.playerType.Value}");
 
-                // Switch based on the synced PlayerType (using .Value to get the actual networked value)
+
                 switch (playerCollision.playerType.Value)
                 {
                     case PlayerCollision.PlayerType.Water:
                         waterCatHealth = catHealth.currentCatHealth.Value;
+                        waterColour.Value = new FixedString32Bytes("BLUE");
+                        waterTag.Value = new FixedString32Bytes("WATER");
+
                         break;
                     case PlayerCollision.PlayerType.Fire:
                         fireCatHealth = catHealth.currentCatHealth.Value;
+                        fireColour.Value = new FixedString32Bytes("RED");
+                        fireTag.Value = new FixedString32Bytes("FIRE");
+
                         break;
                     case PlayerCollision.PlayerType.Plant:
                         plantCatHealth = catHealth.currentCatHealth.Value;
+                        plantColour.Value = new FixedString32Bytes("GREEN");
+                        plantTag.Value = new FixedString32Bytes("PLANT");
+
                         break;
                     case PlayerCollision.PlayerType.Magic:
                         magicCatHealth = catHealth.currentCatHealth.Value;
+                        magiColour.Value = new FixedString32Bytes("PURPLE");
+                        magicTag.Value = new FixedString32Bytes("MAGIC");
                         break;
                 }
             }
-            else
-            {
-                // Log if we couldn't find PlayerCollision or CatHealth for a player
-                if (playerCollision == null)
-                    Debug.LogWarning($"Player {player.name} is missing PlayerCollision.");
-                if (catHealth == null)
-                    Debug.LogWarning($"Player {player.name} is missing CatHealth.");
-            }
+
         }
 
-        // Update UI for all clients
-        UpdateLeaderboardUIClientRpc(waterCatHealth, fireCatHealth, plantCatHealth, magicCatHealth);
+
+
+        UpdateLeaderboardUIClientRpc(
+        waterCatHealth, waterColour.Value.ToString(), waterTag.Value.ToString(), fireCatHealth, fireColour.Value.ToString(), fireTag.Value.ToString(), plantCatHealth, plantColour.Value.ToString(), plantTag.Value.ToString(), magicCatHealth, magiColour.Value.ToString(), magicTag.Value.ToString()
+    );
     }
 
     [ClientRpc]
-    private void UpdateLeaderboardUIClientRpc(float waterHealth, float fireHealth, float plantHealth, float magicHealth)
+    private void UpdateLeaderboardUIClientRpc(
+        float waterHealth, string waterColour, string waterTag, // Added waterTag
+        float fireHealth, string fireColour, string fireTag, // Added fireTag
+        float plantHealth, string plantColour, string plantTag, // Added plantTag
+        float magicHealth, string magicColour, string magicTag // Added magicTag
+    )
     {
-        // Ensure the values are not null or incorrect before using them
-        Debug.Log($"Water Health: {waterHealth}, Fire Health: {fireHealth}, Plant Health: {plantHealth}, Magic Health: {magicHealth}");
+        // Update health
+        WaterHealth.text = $"{waterHealth}";
+        FireHealth.text = $"{fireHealth}";
+        PlantHealth.text = $"{plantHealth}";
+        MagicHealth.text = $"{magicHealth}";
 
-        // Check if any health value is invalid
-        if (float.IsNaN(waterHealth) || float.IsNaN(fireHealth) || float.IsNaN(plantHealth) || float.IsNaN(magicHealth))
-        {
-            Debug.LogError("One of the health values is invalid (NaN).");
-        }
+        // Update colors
+        FireColour.text = $"{fireColour}";
+        WaterColour.text = $"{waterColour}";
+        PlantColour.text = $"{plantColour}";
+        MagiColour.text = $"{magicColour}";
 
-        // Update UI for all clients
-        WaterHealth.text = $"Water: {waterHealth}";
-        FireHealth.text = $"Fire: {fireHealth}";
-        PlantHealth.text = $"Plant: {plantHealth}";
-        MagicHealth.text = $"Magic: {magicHealth}";
-
-        Debug.Log($"Updated leaderboard: Water {waterHealth}, Fire {fireHealth}, Plant {plantHealth}, Magic {magicHealth}");
+        // Update tags (display them in the appropriate UI fields)
+        FireTag.text = $"{fireTag}";
+        WaterTag.text = $"{waterTag}";
+        PlantTag.text = $"{plantTag}";
+        MagicTag.text = $"{magicTag}";
     }
 }
